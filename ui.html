@@ -1,0 +1,111 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/thomas-lowry/figma-plugin-ds/dist/figma-plugin-ds.css">
+<style>
+  body{
+    padding: 1.5em;
+  }
+  div{
+    margin: 1em;
+  }
+  input{
+    display: block;
+  }
+
+  .radio__button{
+    opacity: 100%!important;
+    width: 5em;
+  }
+
+
+  .dropdown_label{
+    font-size: 11px;
+    color: var(--black8);
+
+  }
+</style>
+
+<h2>Clubs Asset Creator</h2>
+
+<div>
+<h3>Copy</h3>
+<div>
+<label for ="header">Header</label>
+<input class="input__field" type="text" value="Your Header" id="header">
+</div>
+<div>
+<label for ="cta1">CTA 1</label>
+<input class="input__field" type="text" value="Your CTA 1" id="cta1">
+
+<label for ="cta2">CTA 2</label>
+<input class="input__field" type="text" value="Your CTA 2" id="cta2">
+</div>
+<div>
+<label for ="pretext">PreText</label>
+<input class="input__field" type="text" value="Your PreText" id="pretext">
+</div>
+<div>
+<label for ="subtext">SubText</label>
+<input class="input__field" type="text" value="Your SubText" id="subtext">
+</div>
+<div>
+<label for ="copyright">Copyright</label>
+<input class="input__field" type="text" value="Your Copyright" id="copyright">
+</div>
+</div>
+
+<div>
+  <h3>Assets</h3>
+<div class="switch">
+  <input class="switch__toggle" type="checkbox" id="full-banner-selected">
+  <label class="switch__label" for="full-banner-selected">Full Size</label>
+</div>
+<div class="switch">
+  <input class="switch__toggle" type="checkbox" id="half-banner-selected">
+  <label class="switch__label" for="half-banner-selected">Half Size</label>
+</div>
+<div class="switch">
+  <input class="switch__toggle" type="checkbox" id="search-results-selected">
+  <label class="switch__label" for="search-results-selected">Search Results</label>
+</div>
+<div class="switch">
+  <input class="switch__toggle" type="checkbox" id="curated-page-selected">
+  <label class="switch__label" for="curated-page-selected">Curated Page</label>
+</div>
+<div class="switch">
+  <input class="switch__toggle" type="checkbox" id="square-selected">
+  <label class="switch__label" for="square-selected">Square</label>
+</div>
+<div>
+  <label for="background-color" class="dropdown_label">Background Color:</label>
+  <select id="background-color">
+    <option value="pink">Pink</option>
+    <option value="orange">Orange</option>
+    <option value="yellow">Yellow</option>
+    <option value="green">Green</option>
+    <option value="blue" >Blue</option>
+  </select>
+</div>
+
+<div class="submit">
+  <button class="button button--primary" id="submit-post">Submit</button>
+</div>
+
+<script>
+  document.getElementById('submit-post').onclick = () => {
+    const header = document.getElementById('header').value;
+    const cta1 = document.getElementById('cta1').value;
+    const cta2 = document.getElementById('cta2').value;
+    const pretext = document.getElementById('pretext').value;
+    const subtext = document.getElementById('subtext').value;
+    const copyright = document.getElementById('copyright').value;
+
+    const fullSelected = document.getElementById('full-banner-selected').checked;
+    const halfSelected = document.getElementById('half-banner-selected').checked;
+    const searchSelected = document.getElementById('search-results-selected').checked;
+    const curatedSelected = document.getElementById('curated-page-selected').checked;
+    const squareSelected = document.getElementById('square-selected').checked;
+    // const imageVariant = document.querySelector('input[name="variantGroup"]:checked').value;
+
+    parent.postMessage({pluginMessage:{header, cta1, cta2, pretext, subtext, copyright, fullSelected, halfSelected, searchSelected, curatedSelected, squareSelected}}, '*');
+  }
+
+</script>
