@@ -63,6 +63,7 @@
 
 <div>
   <h3>Assets</h3>
+  <!-- full size -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="full-size-selected">
     <label class="switch__label" for="full-size-selected">Full Size</label>
@@ -76,6 +77,7 @@
       </select>
     </div>
   </div>
+    <!-- half size -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="half-size-selected">
     <label class="switch__label" for="half-size-selected">Half Size</label>
@@ -91,6 +93,8 @@
       </select>
     </div>
   </div>
+
+  <!-- search results -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="search-results-selected">
     <label class="switch__label" for="search-results-selected">Search Results</label>
@@ -106,6 +110,8 @@
       </select>
     </div>
   </div>
+
+  <!-- curated page -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="curated-page-selected">
     <label class="switch__label" for="curated-page-selected">Curated Page</label>
@@ -121,6 +127,8 @@
       </select>
     </div>
   </div>
+
+  <!-- mobile curated page -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="curated-page-mobile-selected">
     <label class="switch__label" for="curated-page-mobile-selected">Mobile Curated Page</label>
@@ -136,6 +144,8 @@
       </select>
     </div>
   </div>
+
+  <!-- square -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="square-selected">
     <label class="switch__label" for="square-selected">Square</label>
@@ -150,6 +160,8 @@
       </select>
     </div>
   </div>
+
+  <!-- background color -->
   <div>
     <label for="background-color" class="dropdown_label">Background Color:</label>
     <select id="background-color">
@@ -161,11 +173,13 @@
     </select>
   </div>
 
+  <!-- submit -->
   <div class="submit">
     <button class="button button--primary" id="submit-post">Submit</button>
   </div>
 
   <script>
+    // function for variant menu display
     const toggleDropdown = (checkboxId, dropdownId) => {
       document.getElementById(checkboxId).addEventListener('change', (event) => {
         const dropdown = document.getElementById(dropdownId);
@@ -180,6 +194,7 @@
     toggleDropdown('curated-page-mobile-selected', 'curated-page-mobile-variants');
     toggleDropdown('square-selected', 'square-variants');
 
+    // event handler that gathers user inputs
     document.getElementById('submit-post').onclick = () => {
       const header = document.getElementById('header').value;
       const cta1 = document.getElementById('cta1').value;
@@ -201,6 +216,7 @@
       const curatedVariant = curatedSelected ? document.getElementById('curated-page-variant').value : null;
       const squareVariant = squareSelected ? document.getElementById('square-variant').value : null;
 
+      // data being sent to TS file
       parent.postMessage({
         pluginMessage: {
           header,
