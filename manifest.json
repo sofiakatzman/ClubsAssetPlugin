@@ -13,7 +13,8 @@
   "networkAccess": {
     "allowedDomains": [
       "https://cdn.jsdelivr.net",
-      "https://rsms.me"
+      "https://rsms.me",
+      "https://www.figma.com"
     ]
   }
 }

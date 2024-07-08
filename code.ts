@@ -1,12 +1,12 @@
 figma.showUI(__html__);
-figma.ui.resize(350, 500);
+figma.ui.resize(500, 900);
 
 figma.loadAllPagesAsync().then(() => {
   figma.ui.onmessage = async pluginMessage => {
     console.log("Received message:", pluginMessage);
     const nodes:SceneNode[] = [];
     const postComponentSet = figma.root.findOne(node => node.type == "COMPONENT_SET" && node.name == "post") as ComponentSetNode;
-    let selectedVariant = null;
+    let selectedVariant;
 
     if (postComponentSet) {
       console.log("Found postComponentSet:", postComponentSet);
