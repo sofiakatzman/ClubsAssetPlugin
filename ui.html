@@ -207,6 +207,7 @@
       const halfSelected = document.getElementById('half-size-selected').checked;
       const searchSelected = document.getElementById('search-results-selected').checked;
       const curatedSelected = document.getElementById('curated-page-selected').checked;
+      const curatedMobileSelected = document.getElementById('curated-page-mobile-selected').checked;
       const squareSelected = document.getElementById('square-selected').checked;
       const backgroundColor = document.getElementById('background-color').value;
 
@@ -214,6 +215,7 @@
       const halfVariant = halfSelected ? document.getElementById('half-size-variant').value : null;
       const searchVariant = searchSelected ? document.getElementById('search-results-variant').value : null;
       const curatedVariant = curatedSelected ? document.getElementById('curated-page-variant').value : null;
+      const curatedMobileVariant = curatedSelected ? document.getElementById('curated-page-mobile-variant').value : null;
       const squareVariant = squareSelected ? document.getElementById('square-variant').value : null;
 
       // data being sent to TS file
