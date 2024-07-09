@@ -7,13 +7,16 @@ figma.loadAllPagesAsync().then(() => {
     const nodes: SceneNode[] = [];
     const fullSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Full Size Test") as ComponentSetNode;
     const halfSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Half Size Test") as ComponentSetNode;
+    const searchResultsComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Search Results Test") as ComponentSetNode;
     let selectedFullVariant;
     let selectedHalfVariant;
+    let selectedSearchVariant;
 
     // Load fonts
     await figma.loadFontAsync({ family: "Filson Pro", style: "Bold" });
     await figma.loadFontAsync({ family: "Brandon Text", style: "Bold" });
     await figma.loadFontAsync({ family: "Brandon Text", style: "Regular" });
+    await figma.loadFontAsync({ family: "Take Note", style: "Regular" });
 
     
     //**************************************** FULL SIZE - ASSET GENERATION LOGIC ****************************************//
@@ -154,6 +157,65 @@ figma.loadAllPagesAsync().then(() => {
     } else {
       console.error("Component set with the name 'Half Size' not found");
     }
+
+    //**************************************** SEARCH RESULTS - ASSET GENERATION LOGIC ****************************************//
+// check that a search results component was found on figma (template for generated asset)
+if (searchResultsComponentSet) {
+  console.log("Found searchResultsComponentSet:", searchResultsComponentSet);
+
+  // check if search results is selected, if it is, then find the selected variant
+  if (pluginMessage.searchSelected === true) {
+    switch (pluginMessage.searchVariant) {
+      case "sr-header-only":
+        selectedSearchVariant = searchResultsComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, CTA QTY=0, PreText=No, SubText=No") as ComponentNode;
+        break;
+      case "sr-header-subtext":
+        selectedSearchVariant = searchResultsComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, CTA QTY=0, PreText=No, SubText=Yes") as ComponentNode;
+        break;
+      case "sr-header-cta1":
+        selectedSearchVariant = searchResultsComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=1, PreText=No, SubText=No") as ComponentNode;
+        break;
+      case "sr-header-cta2":
+        selectedSearchVariant = searchResultsComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=2, PreText=No, SubText=No") as ComponentNode;
+        break;
+      case "sr-header-pretext-cta1":
+        selectedSearchVariant = searchResultsComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No") as ComponentNode;
+        break;
+      case "sr-header-pretext-cta2":
+        selectedSearchVariant = searchResultsComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No") as ComponentNode;
+        break;
+    }
+
+    if (selectedSearchVariant) {
+      console.log("Found selectedSearchVariant:", selectedSearchVariant);
+      // Create an instance based on the selected variant
+      const newSearchPromo = selectedSearchVariant.createInstance();
+      nodes.push(newSearchPromo);
+
+      // Find text fields in the new instance
+      const templateHeader = newSearchPromo.findOne(node => node.name === "Header" && node.type === "TEXT") as TextNode;
+      const templateCTA1 = newSearchPromo.findOne(node => node.name === "CTA1" && node.type === "TEXT") as TextNode;
+      const templateCTA2 = newSearchPromo.findOne(node => node.name === "CTA2" && node.type === "TEXT") as TextNode;
+      const templateSubtext = newSearchPromo.findOne(node => node.name === "Subtext" && node.type === "TEXT") as TextNode;
+      const templatePretext = newSearchPromo.findOne(node => node.name === "PreText" && node.type === "TEXT") as TextNode;
+      const templateCopyright = newSearchPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
+
+      // Replace text of new instances
+      if (templateHeader) templateHeader.characters = pluginMessage.header;
+      if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
+      if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
+      if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
+      if (templatePretext) templatePretext.characters = pluginMessage.pretext;
+      if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+
+      figma.viewport.scrollAndZoomIntoView(nodes);
+    } else {
+      console.error("No matching component found for the given criteria.");
+    }
+  }
+} else {
+  console.error("Component set with the name 'Search Results Test' not found"); // Fixed this line
+}
 
     // figma.closePlugin();
   };
