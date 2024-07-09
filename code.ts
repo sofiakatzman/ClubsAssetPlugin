@@ -6,7 +6,9 @@ figma.loadAllPagesAsync().then(() => {
     console.log("Received message:", pluginMessage);
     const nodes: SceneNode[] = [];
     const fullSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Full Size Test") as ComponentSetNode;
+    const halfSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Half Size Test") as ComponentSetNode;
     let selectedFullVariant;
+    let selectedHalfVariant;
 
     // Load fonts
     await figma.loadFontAsync({ family: "Filson Pro", style: "Bold" });
@@ -17,7 +19,7 @@ figma.loadAllPagesAsync().then(() => {
     //**************************************** FULL SIZE - ASSET GENERATION LOGIC ****************************************//
     // check that a full size component was found on figma (template for generated asset)
     if (fullSizeComponentSet) {
-      console.log("Found postComponentSet:", fullSizeComponentSet);
+      console.log("Found fullSizeComponentSet:", fullSizeComponentSet);
 
       // check if full size promo is selected, if it is, then find the selected variant
       if (pluginMessage.fullSelected === true) {
@@ -80,6 +82,77 @@ figma.loadAllPagesAsync().then(() => {
       }
     } else {
       console.error("Component set with the name 'Full Size' not found");
+    }
+
+    //**************************************** FULL SIZE - ASSET GENERATION LOGIC ****************************************//
+    // check that a full size component was found on figma (template for generated asset)
+    if (halfSizeComponentSet) {
+      console.log("Found halfSizeComponentSet:", halfSizeComponentSet);
+
+      // check if full size promo is selected, if it is, then find the selected variant
+      if (pluginMessage.halfSelected === true) {
+        switch (pluginMessage.halfVariant) {
+          case "hs-header-only":
+            selectedHalfVariant = halfSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, PreText=No, SubText=No") as ComponentNode;
+            break;
+          case "hs-header-subtext":
+            selectedHalfVariant = halfSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, PreText=No, SubText=Yes") as ComponentNode;
+            break;
+          case "hs-header-cta1":
+            selectedHalfVariant = halfSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, PreText=No, SubText=No") as ComponentNode;
+            break;
+          case "hs-header-subtext-cta1":
+            selectedHalfVariant = halfSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, PreText=No, SubText=Yes") as ComponentNode;
+            break;
+          case "hs-header-pretext-cta1":
+            selectedHalfVariant = halfSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, PreText=Yes, SubText=No") as ComponentNode;
+            break;        
+          }
+
+        if (selectedHalfVariant) {
+          console.log("Found selectedFullVariant:", selectedFullVariant);
+          // Create an instance based on the selected variant
+          const newHalfPromo = selectedHalfVariant.createInstance();
+          nodes.push(newHalfPromo);
+
+          // Find text fields in the new instance
+          const templateHeader = newHalfPromo.findOne(node => node.name === "Header" && node.type === "TEXT") as TextNode;
+          const templateCTA1 = newHalfPromo.findOne(node => node.name === "CTA1" && node.type === "TEXT") as TextNode;
+          const templateCTA2 = newHalfPromo.findOne(node => node.name === "CTA2" && node.type === "TEXT") as TextNode;
+          const templateSubtext = newHalfPromo.findOne(node => node.name === "Subtext" && node.type === "TEXT") as TextNode;
+          const templatePretext = newHalfPromo.findOne(node => node.name === "PreText" && node.type === "TEXT") as TextNode;
+          const templateCopyright = newHalfPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
+
+          // console.log("before assignment testing")
+          // console.log(templateHeader.characters)
+          // console.log(templateCTA1.characters)
+          // console.log(templateCTA2.characters)
+          // console.log(templateSubtext.characters)
+          // console.log(templatePretext.characters)
+          // console.log(templateCopyright.characters)
+
+          // Replace text of new instances
+          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
+          if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
+          if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
+          if (templatePretext) templatePretext.characters = pluginMessage.pretext;
+          if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+
+          // console.log("post assignment testing")
+          // if(templateHeader) console.log(templateHeader.characters)
+          // if(templateCTA1) console.log(templateCTA1.characters)
+          // if(templateCTA2) console.log(templateCTA2.characters)
+          // if(templateSubtext) console.log(templateSubtext.characters)
+          // if(templatePretext) console.log(templatePretext.characters)
+          // if(templateCopyright) console.log(templateCopyright.characters)
+          figma.viewport.scrollAndZoomIntoView(nodes);
+        } else {
+          console.error("No matching component found for the given criteria.");
+        }
+      }
+    } else {
+      console.error("Component set with the name 'Half Size' not found");
     }
 
     // figma.closePlugin();
