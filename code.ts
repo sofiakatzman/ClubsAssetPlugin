@@ -84,12 +84,12 @@ figma.loadAllPagesAsync().then(() => {
       console.error("Component set with the name 'Full Size' not found");
     }
 
-    //**************************************** FULL SIZE - ASSET GENERATION LOGIC ****************************************//
-    // check that a full size component was found on figma (template for generated asset)
+    //**************************************** HALF SIZE - ASSET GENERATION LOGIC ****************************************//
+    // check that a half size component was found on figma (template for generated asset)
     if (halfSizeComponentSet) {
       console.log("Found halfSizeComponentSet:", halfSizeComponentSet);
 
-      // check if full size promo is selected, if it is, then find the selected variant
+      // check if half size promo is selected, if it is, then find the selected variant
       if (pluginMessage.halfSelected === true) {
         switch (pluginMessage.halfVariant) {
           case "hs-header-only":
