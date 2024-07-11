@@ -1,6 +1,7 @@
 figma.showUI(__html__);
 figma.ui.resize(500, 900);
 
+
 figma.loadAllPagesAsync().then(() => {
   figma.ui.onmessage = async pluginMessage => {
     console.log("Received message:", pluginMessage);
@@ -54,7 +55,25 @@ figma.loadAllPagesAsync().then(() => {
       }
     }
 
-    
+    // function that changes text color fill for ADA compliance
+    function adaTextFill(assetNode: TextNode) {
+      if (pluginMessage.backgroundColor === "blue") {
+        assetNode.fills = [{
+          type: 'SOLID',
+          color: { r: 1, g: 1, b: 1 }, // White color (1, 1, 1) instead of black (0, 0, 0)
+        }];
+        console.log("Text changed to white to be ADA compliant!");
+      }
+    }
+
+    // function to make headers Title Case
+    function toTitleCase(sentence: string): string {
+      const words = sentence.toLowerCase().split(' ');
+      const titleCaseWords = words.map(word => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      });
+      return titleCaseWords.join(' ');
+    }
     //**************************************** FULL SIZE - ASSET GENERATION LOGIC ****************************************//
     // check that a full size component was found on figma (template for generated asset)
     if (fullSizeComponentSet) {
@@ -91,16 +110,8 @@ figma.loadAllPagesAsync().then(() => {
           const templatePretext = newFullPromo.findOne(node => node.name === "PreText" && node.type === "TEXT") as TextNode;
           const templateCopyright = newFullPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
-          // console.log("before assignment testing")
-          // console.log(templateHeader.characters)
-          // console.log(templateCTA1.characters)
-          // console.log(templateCTA2.characters)
-          // console.log(templateSubtext.characters)
-          // console.log(templatePretext.characters)
-          // console.log(templateCopyright.characters)
-
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -108,15 +119,17 @@ figma.loadAllPagesAsync().then(() => {
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
 
           //change background color of node
-          changeAssetFillColor(newFullPromo, pluginMessage.backgroundColor)
+          changeAssetFillColor(newFullPromo, pluginMessage.backgroundColor);
 
-          // console.log("post assignment testing")
-          // if(templateHeader) console.log(templateHeader.characters)
-          // if(templateCTA1) console.log(templateCTA1.characters)
-          // if(templateCTA2) console.log(templateCTA2.characters)
-          // if(templateSubtext) console.log(templateSubtext.characters)
-          // if(templatePretext) console.log(templatePretext.characters)
-          // if(templateCopyright) console.log(templateCopyright.characters)
+          //check text ADA Compliance for color fill (if background is blue text = white)
+          if (templateHeader) adaTextFill(templateHeader);
+          if (templateCTA1) adaTextFill(templateCTA1);
+          if (templateCTA2) adaTextFill(templateCTA2);
+          if (templateSubtext) adaTextFill(templateSubtext);
+          if (templatePretext) adaTextFill(templatePretext);
+          if (templateCopyright) adaTextFill(templateCopyright);
+
+
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
           console.error("No matching component found for the given criteria.");
@@ -174,7 +187,7 @@ figma.loadAllPagesAsync().then(() => {
           // console.log(templateCopyright.characters)
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -183,6 +196,14 @@ figma.loadAllPagesAsync().then(() => {
 
           //change background color of node
           changeAssetFillColor(newHalfPromo, pluginMessage.backgroundColor)
+
+          //check text ADA Compliance for color fill (if background is blue text = white)
+          if (templateHeader) adaTextFill(templateHeader);
+          if (templateCTA1) adaTextFill(templateCTA1);
+          if (templateCTA2) adaTextFill(templateCTA2);
+          if (templateSubtext) adaTextFill(templateSubtext);
+          if (templatePretext) adaTextFill(templatePretext);
+          if (templateCopyright) adaTextFill(templateCopyright);
 
           // console.log("post assignment testing")
           // if(templateHeader) console.log(templateHeader.characters)
@@ -243,7 +264,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newSearchPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -252,6 +273,15 @@ figma.loadAllPagesAsync().then(() => {
           
           //change background color of node
           changeAssetFillColor(newSearchPromo, pluginMessage.backgroundColor)
+
+          
+          //check text ADA Compliance for color fill (if background is blue text = white)
+          if (templateHeader) adaTextFill(templateHeader);
+          if (templateCTA1) adaTextFill(templateCTA1);
+          if (templateCTA2) adaTextFill(templateCTA2);
+          if (templateSubtext) adaTextFill(templateSubtext);
+          if (templatePretext) adaTextFill(templatePretext);
+          if (templateCopyright) adaTextFill(templateCopyright);
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -305,7 +335,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newCuratedWebPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -314,7 +344,14 @@ figma.loadAllPagesAsync().then(() => {
 
           //change background color of node
           changeAssetFillColor(newCuratedWebPromo, pluginMessage.backgroundColor)
-
+          
+          //check text ADA Compliance for color fill (if background is blue text = white)
+          if (templateHeader) adaTextFill(templateHeader);
+          if (templateCTA1) adaTextFill(templateCTA1);
+          if (templateCTA2) adaTextFill(templateCTA2);
+          if (templateSubtext) adaTextFill(templateSubtext);
+          if (templatePretext) adaTextFill(templatePretext);
+          if (templateCopyright) adaTextFill(templateCopyright);
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -373,7 +410,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newCuratedMobilePromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -382,6 +419,13 @@ figma.loadAllPagesAsync().then(() => {
 
           //change background color of node
           changeAssetFillColor(newCuratedMobilePromo, pluginMessage.backgroundColor)
+
+          if (templateHeader) adaTextFill(templateHeader);
+          if (templateCTA1) adaTextFill(templateCTA1);
+          if (templateCTA2) adaTextFill(templateCTA2);
+          if (templateSubtext) adaTextFill(templateSubtext);
+          if (templatePretext) adaTextFill(templatePretext);
+          if (templateCopyright) adaTextFill(templateCopyright);
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -430,7 +474,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newSquarePromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -439,6 +483,13 @@ figma.loadAllPagesAsync().then(() => {
 
           //change background color of node
           changeAssetFillColor(newSquarePromo, pluginMessage.backgroundColor)
+
+          if (templateHeader) adaTextFill(templateHeader);
+          if (templateCTA1) adaTextFill(templateCTA1);
+          if (templateCTA2) adaTextFill(templateCTA2);
+          if (templateSubtext) adaTextFill(templateSubtext);
+          if (templatePretext) adaTextFill(templatePretext);
+          if (templateCopyright) adaTextFill(templateCopyright);
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
