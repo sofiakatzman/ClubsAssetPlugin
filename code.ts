@@ -25,6 +25,35 @@ figma.loadAllPagesAsync().then(() => {
     await figma.loadFontAsync({ family: "Brandon Text", style: "Regular" });
     await figma.loadFontAsync({ family: "Take Note", style: "Regular" });
 
+    // function that changes background color fill
+    // GeometryMixin node accepts any node type 
+    function changeAssetFillColor(assetNode: GeometryMixin, colorName: string) {
+      // Define a color mapping object
+      const colorMap: { [key: string]: { r: number, g: number, b: number } } = {
+        pink: { r: 1, g: .59, b: .71 },  
+        yellow: { r: 1, g: .86, b: .37 },     
+        blue: { r: .17, g: .45, b: .89 }, 
+        green: { r: 0, g: .76, b: .40 }, 
+        orange: { r: 1, g: .62, b: .11 }, 
+      };
+    
+      // Get the color from the map based on the color name
+      const color = colorMap[colorName.toLowerCase()];
+    
+      if (color) {
+        // Change the fill color of the asset node
+        assetNode.fills = [
+          {
+            type: 'SOLID',
+            color: color
+          }
+        ];
+        console.log(`Changed asset fill color to ${colorName}`);
+      } else {
+        console.error(`Color ${colorName} not found in color map.`);
+      }
+    }
+
     
     //**************************************** FULL SIZE - ASSET GENERATION LOGIC ****************************************//
     // check that a full size component was found on figma (template for generated asset)
@@ -77,6 +106,9 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
           if (templatePretext) templatePretext.characters = pluginMessage.pretext;
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+
+          //change background color of node
+          changeAssetFillColor(newFullPromo, pluginMessage.backgroundColor)
 
           // console.log("post assignment testing")
           // if(templateHeader) console.log(templateHeader.characters)
@@ -149,6 +181,9 @@ figma.loadAllPagesAsync().then(() => {
           if (templatePretext) templatePretext.characters = pluginMessage.pretext;
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
 
+          //change background color of node
+          changeAssetFillColor(newHalfPromo, pluginMessage.backgroundColor)
+
           // console.log("post assignment testing")
           // if(templateHeader) console.log(templateHeader.characters)
           // if(templateCTA1) console.log(templateCTA1.characters)
@@ -214,6 +249,9 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
           if (templatePretext) templatePretext.characters = pluginMessage.pretext;
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+          
+          //change background color of node
+          changeAssetFillColor(newSearchPromo, pluginMessage.backgroundColor)
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -273,6 +311,10 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
           if (templatePretext) templatePretext.characters = pluginMessage.pretext;
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+
+          //change background color of node
+          changeAssetFillColor(newCuratedWebPromo, pluginMessage.backgroundColor)
+
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -338,6 +380,9 @@ figma.loadAllPagesAsync().then(() => {
           if (templatePretext) templatePretext.characters = pluginMessage.pretext;
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
 
+          //change background color of node
+          changeAssetFillColor(newCuratedMobilePromo, pluginMessage.backgroundColor)
+
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
           console.error("No matching component found for the given criteria.");
@@ -381,7 +426,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCTA1 = newSquarePromo.findOne(node => node.name === "CTA1" && node.type === "TEXT") as TextNode;
           const templateCTA2 = newSquarePromo.findOne(node => node.name === "CTA2" && node.type === "TEXT") as TextNode;
           const templateSubtext = newSquarePromo.findOne(node => node.name === "Subtext" && node.type === "TEXT") as TextNode;
-          const templatePretext = newSquarePromo.findOne(node => node.name === "PreText" && node.type === "TEXT") as TextNode;
+          const templatePretext = newSquarePromo.findOne(node => node.name === "Pretext" && node.type === "TEXT") as TextNode;
           const templateCopyright = newSquarePromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
@@ -391,6 +436,9 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
           if (templatePretext) templatePretext.characters = pluginMessage.pretext;
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+
+          //change background color of node
+          changeAssetFillColor(newSquarePromo, pluginMessage.backgroundColor)
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
