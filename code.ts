@@ -286,13 +286,6 @@ figma.loadAllPagesAsync().then(() => {
     // check that a search results component was found on figma (template for generated asset)
     if (curatedMobileComponentSet) {
       console.log("Found curatedMobileComponentSet:", curatedMobileComponentSet);
-
-      console.log(curatedMobileComponentSet)
-      console.log(pluginMessage.curatedMobileSelected)
-      console.log(pluginMessage.curatedMobileVariant)
-
-
-
       // check if search results is selected, if it is, then find the selected variant
       if (pluginMessage.curatedMobileSelected === true) {
         switch (pluginMessage.curatedMobileVariant) {
@@ -324,7 +317,6 @@ figma.loadAllPagesAsync().then(() => {
         }
 
         if (selectedCuratedMobileVariant) {
-          console.log("Found selectedCuratedMobileVariant:", selectedCuratedMobileVariant);
           // Create an instance based on the selected variant
           const newCuratedMobilePromo = selectedCuratedMobileVariant.createInstance();
           nodes.push(newCuratedMobilePromo);
