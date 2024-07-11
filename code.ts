@@ -426,7 +426,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCTA1 = newSquarePromo.findOne(node => node.name === "CTA1" && node.type === "TEXT") as TextNode;
           const templateCTA2 = newSquarePromo.findOne(node => node.name === "CTA2" && node.type === "TEXT") as TextNode;
           const templateSubtext = newSquarePromo.findOne(node => node.name === "Subtext" && node.type === "TEXT") as TextNode;
-          const templatePretext = newSquarePromo.findOne(node => node.name === "Pretext" && node.type === "TEXT") as TextNode;
+          const templatePretext = newSquarePromo.findOne(node => node.name === "PreText" && node.type === "TEXT") as TextNode;
           const templateCopyright = newSquarePromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
