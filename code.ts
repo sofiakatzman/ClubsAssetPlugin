@@ -10,13 +10,14 @@ figma.loadAllPagesAsync().then(() => {
     const searchResultsComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Search Results Test") as ComponentSetNode;
     const curatedWebComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Curated Page Web Test") as ComponentSetNode;
     const curatedMobileComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Curated Mobile Test") as ComponentSetNode;
+    const squareComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Square Test") as ComponentSetNode;
 
-    console.log(curatedMobileComponentSet)
     let selectedFullVariant;
     let selectedHalfVariant;
     let selectedSearchVariant;
     let selectedCuratedWebVariant;
     let selectedCuratedMobileVariant;
+    let selectedSquareVariant;
 
     // Load fonts
     await figma.loadFontAsync({ family: "Filson Pro", style: "Bold" });
@@ -344,6 +345,60 @@ figma.loadAllPagesAsync().then(() => {
       }
     } else {
       console.error("Component set with the name 'Curated Page Mobile Test' not found"); 
+    }
+
+    //**************************************** SQUARE - ASSET GENERATION LOGIC ****************************************//
+    // check that a square component was found on figma (template for generated asset)
+    if (squareComponentSet) {
+      console.log("Found squareComponentSet:", squareComponentSet);
+      // check if search results is selected, if it is, then find the selected variant
+      if (pluginMessage.squareSelected === true) {
+        switch (pluginMessage.squareVariant) {
+          case "sq-header-only":
+            selectedSquareVariant = squareComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, PreText=No, SubText=No") as ComponentNode;
+            break;
+          case "sq-header-cta1":
+            selectedSquareVariant = squareComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, PreText=No, SubText=No") as ComponentNode;
+            break;
+          case "sq-header-pretext-cta1":
+            selectedSquareVariant = squareComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, PreText=Yes, SubText=No") as ComponentNode;
+            break;
+          case "sq-header-subtext-cta1":
+            selectedSquareVariant = squareComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, PreText=No, SubText=Yes") as ComponentNode;
+            break;
+          case "sq-header-subtext":
+            selectedSquareVariant = squareComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, PreText=No, SubText=Yes") as ComponentNode;
+            break;
+        }
+
+        if (selectedSquareVariant) {
+          // Create an instance based on the selected variant
+          const newSquarePromo = selectedSquareVariant.createInstance();
+          nodes.push(newSquarePromo);
+
+          // Find text fields in the new instance
+          const templateHeader = newSquarePromo.findOne(node => node.name === "Header" && node.type === "TEXT") as TextNode;
+          const templateCTA1 = newSquarePromo.findOne(node => node.name === "CTA1" && node.type === "TEXT") as TextNode;
+          const templateCTA2 = newSquarePromo.findOne(node => node.name === "CTA2" && node.type === "TEXT") as TextNode;
+          const templateSubtext = newSquarePromo.findOne(node => node.name === "Subtext" && node.type === "TEXT") as TextNode;
+          const templatePretext = newSquarePromo.findOne(node => node.name === "PreText" && node.type === "TEXT") as TextNode;
+          const templateCopyright = newSquarePromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
+
+          // Replace text of new instances
+          if (templateHeader) templateHeader.characters = pluginMessage.header;
+          if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
+          if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
+          if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
+          if (templatePretext) templatePretext.characters = pluginMessage.pretext;
+          if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+
+          figma.viewport.scrollAndZoomIntoView(nodes);
+        } else {
+          console.error("No matching component found for the given criteria.");
+        }
+      }
+    } else {
+      console.error("Component set with the name 'Square' not found"); 
     }
 
     // figma.closePlugin();
