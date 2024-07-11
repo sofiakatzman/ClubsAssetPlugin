@@ -141,6 +141,8 @@
         <option value="cpm-header-cta2">Header and Double CTA</option>
         <option value="cpm-header-pretext-cta1">Header, Pretext and Single CTA</option>
         <option value="cpm-header-pretext-cta2">Header, Pretext and Double CTA</option>
+        <option value="cpm-header-subtext-cta1">Header, Subtext and Single CTA</option>
+        <option value="cpm-header-subtext-cta2">Header, Subtext and Double CTA</option>
       </select>
     </div>
   </div>
@@ -194,6 +196,8 @@
     toggleDropdown('curated-page-mobile-selected', 'curated-page-mobile-variants');
     toggleDropdown('square-selected', 'square-variants');
 
+
+
     // event handler that gathers user inputs
     document.getElementById('submit-post').onclick = () => {
       const header = document.getElementById('header').value;
@@ -215,7 +219,7 @@
       const halfVariant = halfSelected ? document.getElementById('half-size-variant').value : null;
       const searchVariant = searchSelected ? document.getElementById('search-results-variant').value : null;
       const curatedVariant = curatedSelected ? document.getElementById('curated-page-variant').value : null;
-      const curatedMobileVariant = curatedSelected ? document.getElementById('curated-page-mobile-variant').value : null;
+      const curatedMobileVariant = curatedMobileSelected ? document.getElementById('curated-page-mobile-variant').value : null;
       const squareVariant = squareSelected ? document.getElementById('square-variant').value : null;
 
       // data being sent to TS file
@@ -231,6 +235,7 @@
           halfSelected,
           searchSelected,
           curatedSelected,
+          curatedMobileSelected,
           squareSelected,
           backgroundColor,
           fullVariant,
