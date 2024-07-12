@@ -67,13 +67,13 @@ figma.loadAllPagesAsync().then(() => {
     }
 
     // function to make headers Title Case
-    function toTitleCase(sentence: string): string {
-      const words = sentence.toLowerCase().split(' ');
-      const titleCaseWords = words.map(word => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      });
-      return titleCaseWords.join(' ');
-    }
+    // function toTitleCase(sentence: string): string {
+    //   const words = sentence.toLowerCase().split(' ');
+    //   const titleCaseWords = words.map(word => {
+    //     return word.charAt(0).toUpperCase() + word.slice(1);
+    //   });
+    //   return titleCaseWords.join(' ');
+    // }
     //**************************************** FULL SIZE - ASSET GENERATION LOGIC ****************************************//
     // check that a full size component was found on figma (template for generated asset)
     if (fullSizeComponentSet) {
@@ -111,7 +111,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newFullPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
+          if (templateHeader) templateHeader.characters = (pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -187,7 +187,7 @@ figma.loadAllPagesAsync().then(() => {
           // console.log(templateCopyright.characters)
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
+          if (templateHeader) templateHeader.characters = (pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -264,7 +264,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newSearchPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
+          if (templateHeader) templateHeader.characters = (pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -335,7 +335,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newCuratedWebPromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
+          if (templateHeader) templateHeader.characters = (pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -410,7 +410,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newCuratedMobilePromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
+          if (templateHeader) templateHeader.characters = (pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
@@ -474,7 +474,7 @@ figma.loadAllPagesAsync().then(() => {
           const templateCopyright = newSquarePromo.findOne(node => node.name === "Copyright" && node.type === "TEXT") as TextNode;
 
           // Replace text of new instances
-          if (templateHeader) templateHeader.characters = toTitleCase(pluginMessage.header);
+          if (templateHeader) templateHeader.characters = (pluginMessage.header);
           if (templateCTA1) templateCTA1.characters = pluginMessage.cta1;
           if (templateCTA2) templateCTA2.characters = pluginMessage.cta2;
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
