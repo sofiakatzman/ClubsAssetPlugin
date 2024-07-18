@@ -14,7 +14,7 @@
 
   .input__field{
     border: 1px solid var(--black1);
-    border-radius: ;
+    border-radius: .5px;
   }
 
   .radio__button {
@@ -30,9 +30,10 @@
   .variant-dropdown {
     display: none;
   }
+
 </style>
 
-<h2>Clubs Asset Maker</h2>
+<h2>Clubs Banner Generator</h2>
 
 <div>
   <h3>Copy</h3>
@@ -63,10 +64,10 @@
 
 <div>
   <h3>Assets</h3>
-  <!-- full size -->
+  <!-- full size banner - short -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="full-size-selected">
-    <label class="switch__label" for="full-size-selected">Full Size</label>
+    <label class="switch__label" for="full-size-selected">Full Size Banner - Short</label>
     <div class="variant-dropdown" id="full-size-variants">
       <label for="full-size-variant" class="dropdown_label">Variant:</label>
       <select id="full-size-variant">
@@ -77,10 +78,11 @@
       </select>
     </div>
   </div>
+
     <!-- half size -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="half-size-selected">
-    <label class="switch__label" for="half-size-selected">Half Size</label>
+    <label class="switch__label" for="half-size-selected">Half Size Banner</label>
     <div class="variant-dropdown" id="half-size-variants">
       <label for="half-size-variant" class="dropdown_label">Variant:</label>
       <select id="half-size-variant">
@@ -97,7 +99,7 @@
   <!-- search results -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="search-results-selected">
-    <label class="switch__label" for="search-results-selected">Search Results</label>
+    <label class="switch__label" for="search-results-selected">Search Results Banner - Desktop</label>
     <div class="variant-dropdown" id="search-results-variants">
       <label for="search-results-variant" class="dropdown_label">Variant:</label>
       <select id="search-results-variant">
@@ -111,10 +113,10 @@
     </div>
   </div>
 
-  <!-- curated page -->
+  <!-- collection page hero - desktop -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="curated-page-selected">
-    <label class="switch__label" for="curated-page-selected">Curated Page</label>
+    <label class="switch__label" for="curated-page-selected">Collection Page Hero - Desktop</label>
     <div class="variant-dropdown" id="curated-page-variants">
       <label for="curated-page-variant" class="dropdown_label">Variant:</label>
       <select id="curated-page-variant">
@@ -128,10 +130,10 @@
     </div>
   </div>
 
-  <!-- mobile curated page -->
+  <!-- collection page hero - mobile -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="curated-page-mobile-selected">
-    <label class="switch__label" for="curated-page-mobile-selected">Mobile Curated Page</label>
+    <label class="switch__label" for="curated-page-mobile-selected">Collection Page Hero - Mobile</label>
     <div class="variant-dropdown" id="curated-page-mobile-variants">
       <label for="curated-page-mobile-variant" class="dropdown_label">Variant:</label>
       <select id="curated-page-mobile-variant">
@@ -150,7 +152,7 @@
   <!-- square -->
   <div class="switch">
     <input class="switch__toggle" type="checkbox" id="square-selected">
-    <label class="switch__label" for="square-selected">Square</label>
+    <label class="switch__label" for="square-selected">Square Banner</label>
     <div class="variant-dropdown" id="square-variants">
       <label for="square-variant" class="dropdown_label">Variant:</label>
       <select id="square-variant">

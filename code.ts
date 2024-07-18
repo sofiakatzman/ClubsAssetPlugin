@@ -1,17 +1,17 @@
 figma.showUI(__html__);
-figma.ui.resize(500, 900);
+figma.ui.resize(600, 900);
 
 
 figma.loadAllPagesAsync().then(() => {
   figma.ui.onmessage = async pluginMessage => {
     console.log("Received message:", pluginMessage);
     const nodes: SceneNode[] = [];
-    const fullSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Full Size Test") as ComponentSetNode;
-    const halfSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Half Size Test") as ComponentSetNode;
-    const searchResultsComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Search Results Test") as ComponentSetNode;
-    const curatedWebComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Curated Page Web Test") as ComponentSetNode;
-    const curatedMobileComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Curated Mobile Test") as ComponentSetNode;
-    const squareComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Square Test") as ComponentSetNode;
+    const fullSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Full Size Banner - Short") as ComponentSetNode;
+    const halfSizeComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Half Size Banner ") as ComponentSetNode;
+    const searchResultsComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Search Results Banner - Desktop ") as ComponentSetNode;
+    const curatedWebComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Desktop") as ComponentSetNode;
+    const curatedMobileComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Mobile") as ComponentSetNode;
+    const squareComponentSet = figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Square Banner") as ComponentSetNode;
 
     let selectedFullVariant;
     let selectedHalfVariant;
@@ -66,6 +66,22 @@ figma.loadAllPagesAsync().then(() => {
       }
     }
 
+    // change CTA Pointer color - vector node named 'CTAVector'
+    function changeCTAVectorsColor() {
+      const ctaVectorNodes = figma.currentPage.findAll(node => node.type === 'VECTOR' && node.name === 'CTAVector') as VectorNode[];
+      if (ctaVectorNodes.length > 0) {
+        ctaVectorNodes.forEach(ctaVectorNode => {
+          ctaVectorNode.fills = [{
+            type: 'SOLID',
+            color: { r: 1, g: 1, b: 1 }, 
+          }];
+        });
+        console.log("All CTAVectors changed to white!");
+      } else {
+        console.log("No CTAVectors found!");
+      }
+    }
+
     // function to make headers Title Case
     // function toTitleCase(sentence: string): string {
     //   const words = sentence.toLowerCase().split(' ');
@@ -83,16 +99,16 @@ figma.loadAllPagesAsync().then(() => {
       if (pluginMessage.fullSelected === true) {
         switch (pluginMessage.fullVariant) {
           case "fs-header-only":
-            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, CTA QTY=0, PreText=No, SubText=No, With Image=False, Discount Code=False") as ComponentNode;
+            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, CTA QTY=0, PreText=No, SubText=No, Discount Code=False") as ComponentNode;
             break;
           case "fs-header-subtext":
-            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, CTA QTY=0, PreText=No, SubText=Yes, With Image=False, Discount Code=False") as ComponentNode;
+            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=No, CTA QTY=0, PreText=No, SubText=Yes, Discount Code=False") as ComponentNode;
             break;
           case "fs-header-cta1":
-            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=1, PreText=No, SubText=No, With Image=False, Discount Code=False") as ComponentNode;
+            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=1, PreText=No, SubText=No, Discount Code=False") as ComponentNode;
             break;
           case "fs-header-cta2":
-            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=2, PreText=No, SubText=No, With Image=False, Discount Code=False") as ComponentNode;
+            selectedFullVariant = fullSizeComponentSet.findOne(node => node.type === "COMPONENT" && node.name === "CTA=Yes, CTA QTY=2, PreText=No, SubText=No, Discount Code=False") as ComponentNode;
             break;
         }
 
@@ -117,6 +133,7 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) templateSubtext.characters = pluginMessage.subtext;
           if (templatePretext) templatePretext.characters = pluginMessage.pretext;
           if (templateCopyright) templateCopyright.characters = pluginMessage.copyright;
+          
 
           //change background color of node
           changeAssetFillColor(newFullPromo, pluginMessage.backgroundColor);
@@ -128,6 +145,7 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) adaTextFill(templateSubtext);
           if (templatePretext) adaTextFill(templatePretext);
           if (templateCopyright) adaTextFill(templateCopyright);
+          if (pluginMessage.backgroundColor==="blue")changeCTAVectorsColor()
 
 
           figma.viewport.scrollAndZoomIntoView(nodes);
@@ -204,6 +222,7 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) adaTextFill(templateSubtext);
           if (templatePretext) adaTextFill(templatePretext);
           if (templateCopyright) adaTextFill(templateCopyright);
+          if (pluginMessage.backgroundColor==="blue")changeCTAVectorsColor()
 
           // console.log("post assignment testing")
           // if(templateHeader) console.log(templateHeader.characters)
@@ -282,6 +301,7 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) adaTextFill(templateSubtext);
           if (templatePretext) adaTextFill(templatePretext);
           if (templateCopyright) adaTextFill(templateCopyright);
+          if (pluginMessage.backgroundColor==="blue")changeCTAVectorsColor()
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -352,6 +372,7 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) adaTextFill(templateSubtext);
           if (templatePretext) adaTextFill(templatePretext);
           if (templateCopyright) adaTextFill(templateCopyright);
+          if (pluginMessage.backgroundColor==="blue")changeCTAVectorsColor()
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -426,6 +447,7 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) adaTextFill(templateSubtext);
           if (templatePretext) adaTextFill(templatePretext);
           if (templateCopyright) adaTextFill(templateCopyright);
+          if (pluginMessage.backgroundColor==="blue")changeCTAVectorsColor()
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
@@ -490,6 +512,7 @@ figma.loadAllPagesAsync().then(() => {
           if (templateSubtext) adaTextFill(templateSubtext);
           if (templatePretext) adaTextFill(templatePretext);
           if (templateCopyright) adaTextFill(templateCopyright);
+          if (pluginMessage.backgroundColor==="blue")changeCTAVectorsColor()
 
           figma.viewport.scrollAndZoomIntoView(nodes);
         } else {
