@@ -44,7 +44,7 @@ async function loadFonts() {
       } catch (error) {
         // Handle font loading error
         console.error(`Failed to load font ${font.family} ${font.style}:`, error);
-        figma.notify(`Failed to load font ${font.family} ${font.style}.`);
+        figma.notify(`Failed to load font ${font.family} ${font.style}. Please reinstall it to continue, or reach out to Sofia Katzman`);
           
           // Create a modal dialog UI
           figma.showUI(`
@@ -56,8 +56,8 @@ async function loadFonts() {
                   <h2>Error: Font Not Found</h2>
                   <p>Failed to load font ${font.family} ${font.style}.</p>
                   <p>The plugin will not work as intended with missing fonts.</p> 
-                  <p>Please reinstall fonts using the files in this <a href="https://drive.google.com/drive/folders/1Z3MtBR4LLx7Xv28VeMNCtgfvdKevDLZT">Google Drive folder</a>.</p> 
-                  <p>If the font is already installed, please uninstall it, reinstall using the Google Drive link above and restart your workstation.</p>
+                  <p>Please reinstall fonts using the files in this <a href="https://drive.google.com/drive/folders/1Z3MtBR4LLx7Xv28VeMNCtgfvdKevDLZT" target="_blank">Google Drive folder</a>.</p>  
+                  <p>If the font is already installed, please uninstall it, reinstall using the Google Drive link above and then restart your workstation.</p>
                   <p>For further assistance, or if the above fix does not work as intended, please reach out to Sofia Katzman.</p>
                 </div>
           
