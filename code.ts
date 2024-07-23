@@ -27,13 +27,56 @@ interface PluginMessage {
 }
 
 
-// Define a helper function to load fonts
+// Define a helper function to load fonts and handle errors
 async function loadFonts() {
-  await figma.loadFontAsync({ family: "Filson Pro", style: "Bold" });
-  await figma.loadFontAsync({ family: "Brandon Text", style: "Bold" });
-  await figma.loadFontAsync({ family: "Brandon Text", style: "Regular" });
-  await figma.loadFontAsync({ family: "Take Note", style: "Regular" });
+  const requiredFonts = [
+    { family: "Filson Pro", style: "Bold" },
+    { family: "Brandon Text", style: "Bold" },
+    { family: "Brandon Text", style: "Regular" },
+    { family: "Take Note", style: "Regular" }
+  ];
+
+  try {
+    // Load all fonts asynchronously
+    await Promise.all(requiredFonts.map(async font => {
+      try {
+        await figma.loadFontAsync(font);
+      } catch (error) {
+        // Handle font loading error
+        console.error(`Failed to load font ${font.family} ${font.style}:`, error);
+        figma.notify(`Failed to load font ${font.family} ${font.style}.`);
+          
+          // Create a modal dialog UI
+          figma.showUI(`
+            <html>
+              <head>
+              </head>
+              <body>
+                <div class="modal">
+                  <h2>Error: Font Not Found</h2>
+                  <p>Failed to load font ${font.family} ${font.style}.</p>
+                  <p>The plugin will not work as intended with missing fonts.</p> 
+                  <p>Please reinstall fonts using the files in this <a href="https://drive.google.com/drive/folders/1Z3MtBR4LLx7Xv28VeMNCtgfvdKevDLZT">Google Drive folder</a>.</p> 
+                  <p>If the font is already installed, please uninstall it, reinstall using the Google Drive link above and restart your workstation.</p>
+                  <p>For further assistance, or if the above fix does not work as intended, please reach out to Sofia Katzman.</p>
+                </div>
+          
+              </body>
+            </html>
+          `);
+          figma.ui.resize(600, 300);
+        throw error;
+      }
+    }));
+    return true; 
+  } catch (error) {
+    console.error("Font loading error:", error);
+    return false; 
+  }
 }
+
+
+
 
 // Define a helper function to change asset background fill color
 function changeAssetFillColor(assetNode: GeometryMixin, colorName: string) {
@@ -90,9 +133,6 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   }
 
   const selectedComponent = componentSet.findOne(node => node.type === "COMPONENT" && node.name === variantMappings[selectedVariant]) as ComponentNode;
-
-  console.log(selectedComponent)
-  console.log(selectedVariant)
 
   if (!selectedComponent) {
     console.error(`No matching component found for ${selectedVariant} in ${componentSet.name}`);
@@ -208,4 +248,4 @@ figma.loadAllPagesAsync().then(() => {
 
     console.log("Finished generating assets.");
   };
-});
+}); 
