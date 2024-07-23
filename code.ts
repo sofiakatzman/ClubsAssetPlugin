@@ -26,6 +26,7 @@ interface PluginMessage {
   squareVariant?: string;
 }
 
+
 // Define a helper function to load fonts
 async function loadFonts() {
   await figma.loadFontAsync({ family: "Filson Pro", style: "Bold" });
@@ -89,6 +90,9 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   }
 
   const selectedComponent = componentSet.findOne(node => node.type === "COMPONENT" && node.name === variantMappings[selectedVariant]) as ComponentNode;
+
+  console.log(selectedComponent)
+  console.log(selectedVariant)
 
   if (!selectedComponent) {
     console.error(`No matching component found for ${selectedVariant} in ${componentSet.name}`);
@@ -176,7 +180,9 @@ figma.loadAllPagesAsync().then(() => {
       "cp-header-only": "CTA=No, CTA QTY=0, PreText=No, SubText=No",
       "cp-header-subtext": "CTA=No, CTA QTY=0, PreText=No, SubText=Yes",
       "cp-header-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=No",
-      "cp-header-cta2": "CTA=Yes, CTA QTY=2, PreText=No, SubText=No"
+      "cp-header-cta2": "CTA=Yes, CTA QTY=2, PreText=No, SubText=No",
+      "cp-header-pretext-cta1": "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No",
+      "cp-header-pretext-cta2": "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No"
     }, pluginMessage);
 
     // Collection Page Hero - Mobile
@@ -184,11 +190,15 @@ figma.loadAllPagesAsync().then(() => {
       "cpm-header-only": "CTA=No, CTA QTY=0, PreText=No, SubText=No",
       "cpm-header-subtext": "CTA=No, CTA QTY=0, PreText=No, SubText=Yes",
       "cpm-header-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=No",
-      "cpm-header-cta2": "CTA=Yes, CTA QTY=2, PreText=No, SubText=No"
+      "cpm-header-cta2": "CTA=Yes, CTA QTY=2, PreText=No, SubText=No",
+      "cpm-header-pretext-cta1": "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No",
+      "cpm-header-pretext-cta2": "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No",
+      "cpm-header-subtext-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=Yes",
+      "cpm-header-subtext-cta2": "CTA=Yes, CTA QTY=2, PreText=No, SubText=Yes"
     }, pluginMessage);
 
     // Square Banner
-    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Mobile") as ComponentSetNode, pluginMessage.curatedMobileVariant, {
+    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Square") as ComponentSetNode, pluginMessage.squareVariant, {
       "sq-header-only": "CTA=No, PreText=No, SubText=No",
       "sq-header-cta1": "CTA=Yes, PreText=No, SubText=No",
       "sq-header-pretext-cta1": "CTA=Yes, PreText=Yes, SubText=No",
