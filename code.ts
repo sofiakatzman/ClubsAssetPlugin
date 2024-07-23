@@ -1,6 +1,8 @@
 figma.showUI(__html__);
 figma.ui.resize(600, 600);
 
+let currentY = 0;
+
 // Define the interface for plugin message
 interface PluginMessage {
   header: string;
@@ -119,7 +121,20 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   adaTextFill(templateCopyright, pluginMessage);
   if (pluginMessage.backgroundColor === "blue") changeCTAVectorsColor();
 
-  figma.viewport.scrollAndZoomIntoView(nodes);
+  // position each asset 50px apart on y axis using their height 
+  nodes.forEach((node, index) => {
+    // place node at currentY axis
+    node.y = currentY;
+
+    // Append node to current page
+    figma.currentPage.appendChild(node);
+
+    // Increment currentY for the next node
+    currentY += node.height + 50; 
+
+});
+figma.viewport.scrollAndZoomIntoView(nodes);
+figma.currentPage.selection = nodes;
 }
 
 // Load all pages and set up message handler
