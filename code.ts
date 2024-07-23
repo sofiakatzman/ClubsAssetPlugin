@@ -18,10 +18,10 @@ interface PluginMessage {
   halfVariant?: string;
   searchSelected?: boolean;
   searchVariant?: string;
-  curatedSelected?: boolean;
-  curatedVariant?: string;
-  curatedMobileSelected?: boolean;
-  curatedMobileVariant?: string;
+  collectionSelected?: boolean;
+  collectionVariant?: string;
+  collectionMobileSelected?: boolean;
+  collectionMobileVariant?: string;
   squareSelected?: boolean;
   squareVariant?: string;
 }
@@ -216,7 +216,7 @@ figma.loadAllPagesAsync().then(() => {
     }, pluginMessage);
 
     // Collection Page Hero - Desktop
-    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Desktop") as ComponentSetNode, pluginMessage.curatedVariant, {
+    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Desktop") as ComponentSetNode, pluginMessage.collectionVariant, {
       "cp-header-only": "CTA=No, CTA QTY=0, PreText=No, SubText=No",
       "cp-header-subtext": "CTA=No, CTA QTY=0, PreText=No, SubText=Yes",
       "cp-header-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=No",
@@ -226,7 +226,7 @@ figma.loadAllPagesAsync().then(() => {
     }, pluginMessage);
 
     // Collection Page Hero - Mobile
-    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Mobile") as ComponentSetNode, pluginMessage.curatedMobileVariant, {
+    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Mobile") as ComponentSetNode, pluginMessage.collectionMobileVariant, {
       "cpm-header-only": "CTA=No, CTA QTY=0, PreText=No, SubText=No",
       "cpm-header-subtext": "CTA=No, CTA QTY=0, PreText=No, SubText=Yes",
       "cpm-header-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=No",

@@ -166,11 +166,11 @@
 
   <!-- Collection page hero - desktop -->
   <div class="switch">
-    <input class="switch__toggle" type="checkbox" id="curated-page-selected">
-    <label class="switch__label" for="curated-page-selected">Collection Page Hero - Desktop</label>
-    <div class="variant-dropdown" id="curated-page-variants">
-      <label for="curated-page-variant" class="label">Variant:</label>
-      <select id="curated-page-variant">
+    <input class="switch__toggle" type="checkbox" id="collection-page-selected">
+    <label class="switch__label" for="collection-page-selected">Collection Page Hero - Desktop</label>
+    <div class="variant-dropdown" id="collection-page-variants">
+      <label for="collection-page-variant" class="label">Variant:</label>
+      <select id="collection-page-variant">
         <option value="cp-header-only">Header Only</option>
         <option value="cp-header-subtext">Header and Subtext</option>
         <option value="cp-header-cta1">Header and Single CTA</option>
@@ -178,18 +178,18 @@
         <option value="cp-header-pretext-cta1">Header, Pretext and Single CTA</option>
         <option value="cp-header-pretext-cta2">Header, Pretext and Double CTA</option>
       </select>
-      <input type="checkbox" id="curated-page-background-only" class="background-only-checkbox">
-      <label for="curated-page-background-only" class="label"></label>
+      <input type="checkbox" id="collection-page-background-only" class="background-only-checkbox">
+      <label for="collection-page-background-only" class="label"></label>
     </div>
   </div>
 
   <!-- Collection page hero - mobile -->
   <div class="switch">
-    <input class="switch__toggle" type="checkbox" id="curated-page-mobile-selected">
-    <label class="switch__label" for="curated-page-mobile-selected">Collection Page Hero - Mobile</label>
-    <div class="variant-dropdown" id="curated-page-mobile-variants">
-      <label for="curated-page-mobile-variant" class="label">Variant:</label>
-      <select id="curated-page-mobile-variant">
+    <input class="switch__toggle" type="checkbox" id="collection-page-mobile-selected">
+    <label class="switch__label" for="collection-page-mobile-selected">Collection Page Hero - Mobile</label>
+    <div class="variant-dropdown" id="collection-page-mobile-variants">
+      <label for="collection-page-mobile-variant" class="label">Variant:</label>
+      <select id="collection-page-mobile-variant">
         <option value="cpm-header-only">Header Only</option>
         <option value="cpm-header-subtext">Header and Subtext</option>
         <option value="cpm-header-cta1">Header and Single CTA</option>
@@ -199,8 +199,8 @@
         <option value="cpm-header-subtext-cta1">Header, Subtext and Single CTA</option>
         <option value="cpm-header-subtext-cta2">Header, Subtext and Double CTA</option>
       </select>
-      <input type="checkbox" id="curated-page-mobile-background-only" class="background-only-checkbox">
-      <label for="curated-page-mobile-background-only" class="label"></label>
+      <input type="checkbox" id="collection-page-mobile-background-only" class="background-only-checkbox">
+      <label for="collection-page-mobile-background-only" class="label"></label>
     </div>
   </div>
 
@@ -247,8 +247,8 @@ function toggleBgLabel() {
     'full-size-selected',
     'half-size-selected',
     'search-results-selected',
-    'curated-page-selected',
-    'curated-page-mobile-selected',
+    'collection-page-selected',
+    'collection-page-mobile-selected',
     'square-selected'
   ];
 
@@ -289,8 +289,8 @@ const toggleDropdown = (checkboxId, dropdownId) => {
     toggleDropdown('full-size-selected', 'full-size-variants', );
     toggleDropdown('half-size-selected', 'half-size-variants');
     toggleDropdown('search-results-selected', 'search-results-variants');
-    toggleDropdown('curated-page-selected', 'curated-page-variants');
-    toggleDropdown('curated-page-mobile-selected', 'curated-page-mobile-variants');
+    toggleDropdown('collection-page-selected', 'collection-page-variants');
+    toggleDropdown('collection-page-mobile-selected', 'collection-page-mobile-variants');
     toggleDropdown('square-selected', 'square-variants');
 
     // Function to gather user inputs and send data
@@ -305,23 +305,23 @@ const toggleDropdown = (checkboxId, dropdownId) => {
       const fullSelected = document.getElementById('full-size-selected').checked;
       const halfSelected = document.getElementById('half-size-selected').checked;
       const searchSelected = document.getElementById('search-results-selected').checked;
-      const curatedSelected = document.getElementById('curated-page-selected').checked;
-      const curatedMobileSelected = document.getElementById('curated-page-mobile-selected').checked;
+      const collectionSelected = document.getElementById('collection-page-selected').checked;
+      const collectionMobileSelected = document.getElementById('collection-page-mobile-selected').checked;
       const squareSelected = document.getElementById('square-selected').checked;
       const backgroundColor = document.getElementById('background-color').value;
 
       const fullVariant = fullSelected ? document.getElementById('full-size-variant').value : null;
       const halfVariant = halfSelected ? document.getElementById('half-size-variant').value : null;
       const searchVariant = searchSelected ? document.getElementById('search-results-variant').value : null;
-      const curatedVariant = curatedSelected ? document.getElementById('curated-page-variant').value : null;
-      const curatedMobileVariant = curatedMobileSelected ? document.getElementById('curated-page-mobile-variant').value : null;
+      const collectionVariant = collectionSelected ? document.getElementById('collection-page-variant').value : null;
+      const collectionMobileVariant = collectionMobileSelected ? document.getElementById('collection-page-mobile-variant').value : null;
       const squareVariant = squareSelected ? document.getElementById('square-variant').value : null;
 
       const fullBackgroundOnly = document.getElementById('full-size-background-only').checked;
       const halfBackgroundOnly = document.getElementById('half-size-background-only').checked;
       const searchBackgroundOnly = document.getElementById('search-results-background-only').checked;
-      const curatedBackgroundOnly = document.getElementById('curated-page-background-only').checked;
-      const curatedMobileBackgroundOnly = document.getElementById('curated-page-mobile-background-only').checked;
+      const collectionBackgroundOnly = document.getElementById('collection-page-background-only').checked;
+      const collectionMobileBackgroundOnly = document.getElementById('collection-page-mobile-background-only').checked;
       const squareBackgroundOnly = document.getElementById('square-background-only').checked;
 
       // Send data to TS file
@@ -336,21 +336,21 @@ const toggleDropdown = (checkboxId, dropdownId) => {
           fullSelected,
           halfSelected,
           searchSelected,
-          curatedSelected,
-          curatedMobileSelected,
+          collectionSelected,
+          collectionMobileSelected,
           squareSelected,
           backgroundColor,
           fullVariant,
           halfVariant,
           searchVariant,
-          curatedVariant,
-          curatedMobileVariant,
+          collectionVariant,
+          collectionMobileVariant,
           squareVariant,
           fullBackgroundOnly,
           halfBackgroundOnly,
           searchBackgroundOnly,
-          curatedBackgroundOnly,
-          curatedMobileBackgroundOnly,
+          collectionBackgroundOnly,
+          collectionMobileBackgroundOnly,
           squareBackgroundOnly
         }
       }, '*');
