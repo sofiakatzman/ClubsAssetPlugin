@@ -2,6 +2,7 @@ figma.showUI(__html__);
 figma.ui.resize(600, 600);
 
 let currentY = 0;
+let currentX = 0;
 
 // Define the interface for plugin message
 interface PluginMessage {
@@ -24,8 +25,13 @@ interface PluginMessage {
   collectionMobileVariant?: string;
   squareSelected?: boolean;
   squareVariant?: string;
+  fullBackgroundOnly?: boolean;
+  halfBackgroundOnly?: boolean;
+  searchBackgroundOnly?: boolean;
+  collectionBackgroundOnly?: boolean;
+  collectionMobileBackgroundOnly?: boolean;
+  squareBackgroundOnly?: boolean;
 }
-
 
 // Define a helper function to load fonts and handle errors
 async function loadFonts() {
@@ -120,6 +126,24 @@ function changeCTAVectorsColor() {
   }
 }
 
+// Define a helper function to handle asset generation for background only versions of component sets
+function generateBackgroundOnlyAsset(componentName: string, bgcolor: string) {
+  const component = figma.root.findOne(node => node.type === "COMPONENT" && node.name === componentName) as ComponentNode;
+
+  if (component) {
+    const instance = component.createInstance();
+    figma.currentPage.appendChild(instance);
+    changeAssetFillColor(instance, bgcolor);
+
+    instance.x = 1300;
+    instance.y = currentY
+
+    console.log("Finished generating background only asset!");
+  } else {
+    console.error(`Component "${componentName}" not found.`);
+  }
+}
+
 // Define a helper function to handle asset generation for each component set
 async function generateAsset(componentSet: ComponentSetNode | undefined, selectedVariant: string | undefined, variantMappings: { [key: string]: string }, pluginMessage: PluginMessage) {
   if (!componentSet) {
@@ -195,18 +219,22 @@ figma.loadAllPagesAsync().then(() => {
       "fs-header-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=No",
       "fs-header-cta2": "CTA=Yes, CTA QTY=2, PreText=No, SubText=No"
     }, pluginMessage);
+    if (pluginMessage.fullBackgroundOnly)generateBackgroundOnlyAsset("Full Size Banner - Short (Background Only)", pluginMessage.backgroundColor)
+
 
     // Half Size Banner
-    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Half Size Banner ") as ComponentSetNode, pluginMessage.halfVariant, {
+    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Half Size Banner") as ComponentSetNode, pluginMessage.halfVariant, {
       "hs-header-only": "CTA=No, PreText=No, SubText=No",
       "hs-header-subtext": "CTA=No, PreText=No, SubText=Yes",
       "hs-header-cta1": "CTA=Yes, PreText=No, SubText=No",
       "hs-header-subtext-cta1": "CTA=Yes, PreText=No, SubText=Yes",
       "hs-header-pretext-cta1": "CTA=Yes, PreText=Yes, SubText=No"
     }, pluginMessage);
+    if (pluginMessage.halfBackgroundOnly)generateBackgroundOnlyAsset("Half Size Banner (Background Only)", pluginMessage.backgroundColor)
+
 
     // Search Results Banner - Desktop
-    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Search Results Banner - Desktop ") as ComponentSetNode, pluginMessage.searchVariant, {
+    await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Search Results Banner - Desktop") as ComponentSetNode, pluginMessage.searchVariant, {
       "sr-header-only": "CTA=No, CTA QTY=0, PreText=No, SubText=No",
       "sr-header-subtext": "CTA=No, CTA QTY=0, PreText=No, SubText=Yes",
       "sr-header-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=No",
@@ -214,6 +242,8 @@ figma.loadAllPagesAsync().then(() => {
       "sr-header-pretext-cta1": "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No",
       "sr-header-pretext-cta2": "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No"
     }, pluginMessage);
+    if (pluginMessage.searchBackgroundOnly)generateBackgroundOnlyAsset("Search Results Banner - Desktop (Background Only)", pluginMessage.backgroundColor)
+
 
     // Collection Page Hero - Desktop
     await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Desktop") as ComponentSetNode, pluginMessage.collectionVariant, {
@@ -224,6 +254,8 @@ figma.loadAllPagesAsync().then(() => {
       "cp-header-pretext-cta1": "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No",
       "cp-header-pretext-cta2": "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No"
     }, pluginMessage);
+    if (pluginMessage.collectionBackgroundOnly)generateBackgroundOnlyAsset("Collection Page Hero - Desktop (Background Only)", pluginMessage.backgroundColor)
+
 
     // Collection Page Hero - Mobile
     await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Mobile") as ComponentSetNode, pluginMessage.collectionMobileVariant, {
@@ -236,6 +268,8 @@ figma.loadAllPagesAsync().then(() => {
       "cpm-header-subtext-cta1": "CTA=Yes, CTA QTY=1, PreText=No, SubText=Yes",
       "cpm-header-subtext-cta2": "CTA=Yes, CTA QTY=2, PreText=No, SubText=Yes"
     }, pluginMessage);
+    if (pluginMessage.collectionMobileBackgroundOnly)generateBackgroundOnlyAsset("Collection Page Hero - Mobile (Background Only)", pluginMessage.backgroundColor)
+
 
     // Square Banner
     await generateAsset(figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Square") as ComponentSetNode, pluginMessage.squareVariant, {
@@ -245,7 +279,9 @@ figma.loadAllPagesAsync().then(() => {
       "sq-header-subtext-cta1": "CTA=Yes, PreText=No, SubText=Yes",
       "sq-header-subtext": "CTA=No, PreText=No, SubText=Yes",
     }, pluginMessage);
-
+    if (pluginMessage.squareBackgroundOnly)generateBackgroundOnlyAsset("Square (Background Only)", pluginMessage.backgroundColor)
+    
     console.log("Finished generating assets.");
+    figma.closePlugin();
   };
 }); 
