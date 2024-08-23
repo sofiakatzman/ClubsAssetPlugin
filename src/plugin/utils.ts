@@ -1,4 +1,46 @@
 const AIRTABLEAPIKEY = process.env.AIRTABLE_API_KEY;
+// let generatedAssets: SceneNode[] = [];
+let currentY = 0;
+
+// Function to clear the existing assets and create a new auto layout container
+// export function createAutoLayoutContainer() {
+//   // Remove previous container if it exists
+//   const existingContainer = figma.root.findOne(node => node.name === "Generated Assets Container" && node.type === "FRAME") as FrameNode;
+//   if (existingContainer) {
+//     existingContainer.remove();
+//   }
+
+//   // Create a new frame with auto layout
+//   const container = figma.createFrame();
+//   container.name = "Generated Assets Container";
+//   container.layoutMode = "VERTICAL"; // or "HORIZONTAL" depending on your needs
+//   container.primaryAxisAlignItems = "MIN"; // Adjust alignment as needed
+//   container.counterAxisAlignItems = "CENTER"; // Adjust alignment as needed
+//   container.paddingLeft = 20;
+//   container.paddingRight = 20;
+//   container.paddingTop = 20;
+//   container.paddingBottom = 20;
+//   container.itemSpacing = 10;
+
+// // Add all generated assets to the container
+// generatedAssets.forEach(asset => {
+//   // Remove asset from its previous parent
+//   if (asset.parent) {
+//     asset.remove();
+//   }
+
+//   figma.viewport.scrollAndZoomIntoView([container]);
+//   // Append asset to the container
+//   container.appendChild(asset);
+// });
+
+//   // Center the viewport on the new container
+//   figma.viewport.scrollAndZoomIntoView([container]);
+
+//   // Reset the global array
+//   generatedAssets = [];
+// }
+
 async function loadFonts() {
   console.log("fetching fonts")
   const requiredFonts = [
@@ -75,17 +117,16 @@ export function fetchAirTable(airtableURL: string) {
       data.records.forEach((asset: Asset) => {
         console.log("assets fetched")
         console.log("type: " + asset.fields.Type)
-        if (asset.fields.Type === "Half Size") {;
           let variantMapping = asset.fields.Layout
-          if(asset.fields.Layout==="Header Only"){
+          if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header Only"){
             variantMapping = "CTA=No, PreText=No, SubText=No"
-          } else if(asset.fields.Layout==="Header and Subtext"){
+          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header and Subtext"){
             variantMapping = "CTA=No, PreText=No, SubText=Yes"
-          } else if(asset.fields.Layout==="Header with CTA"){
+          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header with CTA"){
             variantMapping = "CTA=Yes, PreText=No, SubText=No"
-          } else if(asset.fields.Layout==="Header, CTA and Subtext"){
+          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header, CTA and Subtext"){
            variantMapping = "CTA=Yes, PreText=No, SubText=Yes"
-          } else if(asset.fields.Layout==="Header, CTA and Pretext"){
+          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header, CTA and Pretext"){
             variantMapping = "CTA=Yes, PreText=Yes, SubText=No"
           }
 
@@ -113,14 +154,14 @@ export function fetchAirTable(airtableURL: string) {
               header: asset.fields.Title,
               cta1: asset.fields.CTA1,
               cta2: asset.fields.CTA2,
-              subtext: asset.fields.Subtext,
+              subtext: asset.fields.SubText,
               pretext: asset.fields.PreText,
               copyright: asset.fields.Copyright,
               backgroundColor: asset.fields.BackgroundColor
 
             }
           );
-        }
+        
       });
     } else {
       console.error('Data is not in AirtableResponse format');
@@ -151,33 +192,34 @@ function changeAssetFillColor(assetNode: GeometryMixin, colorName: string) {
   }
 }
 
-// Define a helper function to change text color for ADA compliance
-function adaTextFill(assetNode: TextNode, pluginMessage: PluginMessage) {
-  if (pluginMessage.backgroundColor === "blue") {
-    assetNode.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
-    console.log("Text changed to white to be ADA compliant!");
-    changeCTAVectorsColor();
-  }
-}
+// Define a helper function to change text color for ADA compliance - removing for now for sake of time - revisiting
+// function adaTextFill(assetNode: TextNode, pluginMessage: PluginMessage) {
+//   if (pluginMessage.backgroundColor == "blue") {
+//     assetNode.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+//     console.log("Text changed to white to be ADA compliant!");
+//     changeCTAVectorsColor();
+//   }
+// }
 
 // Define a helper function to change CTA Vectors color
-function changeCTAVectorsColor() {
-  const ctaVectorNodes = figma.currentPage.findAll(node => node.type === 'VECTOR' && node.name === 'CTAVector') as VectorNode[];
-  if (ctaVectorNodes.length > 0) {
-    ctaVectorNodes.forEach(ctaVectorNode => {
-      ctaVectorNode.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
-    });
-    console.log("All CTAVectors changed to white!");
-  } else {
-    console.log("No CTAVectors found!");
-  }
-}
+// function changeCTAVectorsColor() {
+//   const ctaVectorNodes = figma.currentPage.findAll(node => node.type === 'VECTOR' && node.name === 'CTAVector') as VectorNode[];
+//   if (ctaVectorNodes.length > 0) {
+//     ctaVectorNodes.forEach(ctaVectorNode => {
+//       ctaVectorNode.fills = [{ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }];
+//     });
+//     console.log("All CTAVectors changed to RGB181818!");
+//   } else {
+//     console.log("No CTAVectors found!");
+//   }
+// }
 
 // Define a helper function to handle asset generation for each component set
 async function generateAsset(componentSet: ComponentSetNode | undefined, selectedVariant: string | undefined, variantMapping: string, pluginMessage: PluginMessage) {
   // Error if no components found
+
   await loadFonts();
-  console.log("Asset being generated, here are you data points" + componentSet, selectedVariant, variantMapping)
+  console.log(pluginMessage)
   console.log("Component Set: " + componentSet )
   console.log("Selected Variant: " + selectedVariant )
   console.log("Variant Mapping: " + variantMapping )
@@ -204,6 +246,25 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   // Instantiate new promo
   const newPromo = selectedComponent.createInstance();
   const nodes: SceneNode[] = [newPromo];
+  console.log(nodes)
+  // generatedAssets.push(newPromo);
+
+  nodes.forEach(node => {
+    node.y = currentY;
+
+    // Append node to the current page
+    figma.currentPage.appendChild(node);
+
+    // Increment currentY for the next node
+    currentY += node.height + 50; 
+
+    console.log("Asset positioned at Y: " + currentY);
+  });
+
+  // Center the viewport on the new nodes
+  figma.viewport.scrollAndZoomIntoView(nodes);
+  figma.currentPage.selection = nodes;
+
 
   console.log("new instance instanciated!" + newPromo)
   // Find text to replace
@@ -224,14 +285,13 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
 
   // Change text and background fills
   changeAssetFillColor(newPromo, pluginMessage.backgroundColor);
-  adaTextFill(templateHeader, pluginMessage);
-  adaTextFill(templateCTA1, pluginMessage);
-  adaTextFill(templateCTA2, pluginMessage);
-  adaTextFill(templateSubtext, pluginMessage);
-  adaTextFill(templatePretext, pluginMessage);
-  adaTextFill(templateCopyright, pluginMessage);
-  if (pluginMessage.backgroundColor === "blue") changeCTAVectorsColor();
-
+  // adaTextFill(templateHeader, pluginMessage);
+  // adaTextFill(templateCTA1, pluginMessage);
+  // adaTextFill(templateCTA2, pluginMessage);``
+  // adaTextFill(templateSubtext, pluginMessage);
+  // adaTextFill(templatePretext, pluginMessage);
+  // adaTextFill(templateCopyright, pluginMessage);
+  // if (pluginMessage.backgroundColor == "blue") changeCTAVectorsColor();
+  // changeCTAVectorsColor();
   // Scroll and zoom into view
-  figma.viewport.scrollAndZoomIntoView(nodes);
 }

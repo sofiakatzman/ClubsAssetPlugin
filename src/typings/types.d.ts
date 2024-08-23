@@ -16,7 +16,7 @@ interface Asset {
     CTA1: string;
     CTA2: string;
     PreText: string;
-    Subtext: string;
+    SubText: string;
     DiscountCode: string;
     Bookcover: string;
     Copyright: string;
