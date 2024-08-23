@@ -118,6 +118,7 @@ export function fetchAirTable(airtableURL: string) {
         console.log("assets fetched")
         console.log("type: " + asset.fields.Type)
           let variantMapping = asset.fields.Layout
+          // process half size
           if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header Only"){
             variantMapping = "CTA=No, PreText=No, SubText=No"
           } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header and Subtext"){
@@ -129,6 +130,24 @@ export function fetchAirTable(airtableURL: string) {
           } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header, CTA and Pretext"){
             variantMapping = "CTA=Yes, PreText=Yes, SubText=No"
           }
+
+          //process full size banner - short
+          if(asset.fields.Type === "Full Banner - Short" && asset.fields.Layout==="Header Only"){
+            variantMapping = "CTA=No, PreText=No, SubText=No"
+          }
+          if(asset.fields.Type === "Full Banner - Short" && asset.fields.Layout==="Header Only"){
+            variantMapping = "CTA=No, PreText=No, SubText=No"
+          }
+          
+          //process full size
+
+          //process full size
+
+          //process full size
+
+          //process full size
+
+
 
           // Find the component set in Figma
           let componentSet: ComponentSetNode | null = null;
