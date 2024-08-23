@@ -48,8 +48,8 @@ module.exports = (env, argv) => ({
       path: './.env', // Specify the path to your .env file if it's not in the root
       systemvars: true, // Load system environment variables as well
     }),
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(process.env), // Define process.env for the browser
-    }),
+    // new webpack.DefinePlugin({
+    //   'process.env': JSON.stringify(process.env), // Define process.env for the browser
+    // }),
   ],
 });
