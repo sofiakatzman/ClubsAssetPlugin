@@ -164,7 +164,7 @@ export function fetchAirTable(airtableURL: string) {
             return;
           }
 
-          console.log("generating asset function execution is next")
+          console.log("generating asset function execution is next - BookCover:")
           generateAsset(
             componentSet,
             asset.fields.Type, // selectedVariant
@@ -177,7 +177,7 @@ export function fetchAirTable(airtableURL: string) {
               pretext: asset.fields.PreText,
               copyright: asset.fields.Copyright,
               backgroundColor: asset.fields.BackgroundColor,
-              bookCover: asset.fields.Bookcover
+              bookCover: asset.fields.bookCover
             }
           );
         
@@ -270,9 +270,10 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   // generatedAssets.push(newPromo);
 
   nodes.forEach(node => {
+    console.log("this is your bookcover URL:")
     console.log(pluginMessage.bookCover)
     // fillBookCoverWithColor(node)
-    getBookCover(newPromo)
+    getBookCover(newPromo, pluginMessage.bookCover)
     node.y = currentY;
 
     // Append node to the current page
@@ -374,8 +375,8 @@ function findFrameByName(node: SceneNode, frameName: string): FrameNode | null {
 
 // }
 
-function getBookCover(parentNode: SceneNode) {
-  const url = "https://v5.airtableusercontent.com/v3/u/32/32/1724457600000/YrX4wEJUUaB2az3_HoPNaw/1NoxHvi9c1QlYdsvxpWq7EwMipkM-42gzY54oe_D7XDGeijmJzsxF7WklL2Wwu8Q6tubt0141JSUCKFfFd09pcE5umTT5e69dO95ouhm2PDpSXtdiisPa7LTQL_nu0IVBcb1Wl1rmECJZ574P7IHqA/j3qtBwlX1EdO40xsmCCv8SQiwLFVxyo-gm6JdrzyxUo";
+function getBookCover(parentNode: SceneNode, bookCover:string) {
+  const url = bookCover;
   const bookCoverFrame = findFrameByName(parentNode, 'BOOKCOVER');
   if (!bookCoverFrame) {
     console.error('BOOKCOVER frame not found inside the parent node.');

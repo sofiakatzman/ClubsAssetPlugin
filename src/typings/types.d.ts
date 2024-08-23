@@ -18,7 +18,6 @@ interface Asset {
     PreText: string;
     SubText: string;
     DiscountCode: string;
-    Bookcover: string;
     Copyright: string;
     Layout: string;
     Type: string;
