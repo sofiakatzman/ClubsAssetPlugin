@@ -272,7 +272,7 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   nodes.forEach(node => {
     console.log(pluginMessage.bookCover)
     // fillBookCoverWithColor(node)
-    getBookCover()
+    getBookCover(newPromo)
     node.y = currentY;
 
     // Append node to the current page
@@ -319,69 +319,35 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   // Scroll and zoom into view
 }
 
-function getBookCover(){
-const url = "https://v5.airtableusercontent.com/v3/u/32/32/1724457600000/YrX4wEJUUaB2az3_HoPNaw/1NoxHvi9c1QlYdsvxpWq7EwMipkM-42gzY54oe_D7XDGeijmJzsxF7WklL2Wwu8Q6tubt0141JSUCKFfFd09pcE5umTT5e69dO95ouhm2PDpSXtdiisPa7LTQL_nu0IVBcb1Wl1rmECJZ574P7IHqA/j3qtBwlX1EdO40xsmCCv8SQiwLFVxyo-gm6JdrzyxUo";
-
-// Fetch the image from the URL
-fetch(url)
-  .then(response => response.arrayBuffer())
-  .then(buffer => {
-    // Create an image using the buffer
-    const image = figma.createImage(new Uint8Array(buffer));
-
-    // Create a rectangle and set its size to match the image dimensions
-    const node = figma.createRectangle();
-    node.resize(100, 100);
-
-    // Apply the image as a fill to the rectangle
-    node.fills = [
-      {
-        type: 'IMAGE',
-        imageHash: image.hash,
-        scaleMode: 'FILL'
-      }
-    ];
-
-    // Add the node to the current page
-    figma.currentPage.appendChild(node);
-    figma.viewport.scrollAndZoomIntoView([node]);
-  })
-  .catch(error => {
-    figma.notify("Failed to load image: " + error);
-  })
-  .finally(() => {
-    // figma.closePlugin();
-    console.log('the end')
-  });}
 
 
   
 
-// /**
-//  * Recursively searches for a frame with the specified name within a node.
-//  * @param node - The node to search within.
-//  * @param frameName - The name of the frame to find.
-//  * @returns The found frame, or null if not found.
-//  */
-// function findFrameByName(node: SceneNode, frameName: string): FrameNode | null {
-//   // If the node is a frame and matches the name, return it
-//   if (node.type === 'FRAME' && node.name === frameName) {
-//     return node as FrameNode;
-//   }
+/**
+ * Recursively searches for a frame with the specified name within a node.
+ * @param node - The node to search within.
+ * @param frameName - The name of the frame to find.
+ * @returns The found frame, or null if not found.
+ */
+function findFrameByName(node: SceneNode, frameName: string): FrameNode | null {
+  // If the node is a frame and matches the name, return it
+  if (node.type === 'FRAME' && node.name === frameName) {
+    return node as FrameNode;
+  }
 
-//   // Handle nodes that might contain children
-//   if ((node as any).children && Array.isArray((node as any).children)) {
-//     for (const child of (node as any).children) {
-//       const result = findFrameByName(child, frameName);
-//       if (result) {
-//         return result;
-//       }
-//     }
-//   }
+  // Handle nodes that might contain children
+  if ((node as any).children && Array.isArray((node as any).children)) {
+    for (const child of (node as any).children) {
+      const result = findFrameByName(child, frameName);
+      if (result) {
+        return result;
+      }
+    }
+  }
 
-//   // Return null if not found
-//   return null;
-// }
+  // Return null if not found
+  return null;
+}
 
 // /**
 //  * Fills the `BOOKCOVER` frame inside a given node with a solid color.
@@ -407,3 +373,38 @@ fetch(url)
 //   // }];
 
 // }
+
+function getBookCover(parentNode: SceneNode) {
+  const url = "https://v5.airtableusercontent.com/v3/u/32/32/1724457600000/YrX4wEJUUaB2az3_HoPNaw/1NoxHvi9c1QlYdsvxpWq7EwMipkM-42gzY54oe_D7XDGeijmJzsxF7WklL2Wwu8Q6tubt0141JSUCKFfFd09pcE5umTT5e69dO95ouhm2PDpSXtdiisPa7LTQL_nu0IVBcb1Wl1rmECJZ574P7IHqA/j3qtBwlX1EdO40xsmCCv8SQiwLFVxyo-gm6JdrzyxUo";
+  const bookCoverFrame = findFrameByName(parentNode, 'BOOKCOVER');
+  if (!bookCoverFrame) {
+    console.error('BOOKCOVER frame not found inside the parent node.');
+    return;
+  }
+
+  // Fetch the image from the URL
+  fetch(url)
+    .then(response => response.arrayBuffer())
+    .then(buffer => {
+      // Create an image using the buffer
+      const image = figma.createImage(new Uint8Array(buffer));
+
+      // Set the image as a fill to the frame
+      bookCoverFrame.fills = [
+        {
+          type: 'IMAGE',
+          imageHash: image.hash,
+          scaleMode: 'FIT'
+        }
+      ];
+
+      figma.viewport.scrollAndZoomIntoView([bookCoverFrame]);
+    })
+    .catch(error => {
+      figma.notify("Failed to load image: " + error);
+    })
+    .finally(() => {
+      // figma.closePlugin();
+      console.log('the end');
+    });
+}
