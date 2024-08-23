@@ -176,8 +176,8 @@ export function fetchAirTable(airtableURL: string) {
               subtext: asset.fields.SubText,
               pretext: asset.fields.PreText,
               copyright: asset.fields.Copyright,
-              backgroundColor: asset.fields.BackgroundColor
-
+              backgroundColor: asset.fields.BackgroundColor,
+              bookCover: asset.fields.Bookcover
             }
           );
         
@@ -265,10 +265,14 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   // Instantiate new promo
   const newPromo = selectedComponent.createInstance();
   const nodes: SceneNode[] = [newPromo];
+  
   console.log(nodes)
   // generatedAssets.push(newPromo);
 
   nodes.forEach(node => {
+    console.log(pluginMessage.bookCover)
+    // fillBookCoverWithColor(node)
+    getBookCover()
     node.y = currentY;
 
     // Append node to the current page
@@ -314,3 +318,92 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   // changeCTAVectorsColor();
   // Scroll and zoom into view
 }
+
+function getBookCover(){
+const url = "https://v5.airtableusercontent.com/v3/u/32/32/1724457600000/YrX4wEJUUaB2az3_HoPNaw/1NoxHvi9c1QlYdsvxpWq7EwMipkM-42gzY54oe_D7XDGeijmJzsxF7WklL2Wwu8Q6tubt0141JSUCKFfFd09pcE5umTT5e69dO95ouhm2PDpSXtdiisPa7LTQL_nu0IVBcb1Wl1rmECJZ574P7IHqA/j3qtBwlX1EdO40xsmCCv8SQiwLFVxyo-gm6JdrzyxUo";
+
+// Fetch the image from the URL
+fetch(url)
+  .then(response => response.arrayBuffer())
+  .then(buffer => {
+    // Create an image using the buffer
+    const image = figma.createImage(new Uint8Array(buffer));
+
+    // Create a rectangle and set its size to match the image dimensions
+    const node = figma.createRectangle();
+    node.resize(100, 100);
+
+    // Apply the image as a fill to the rectangle
+    node.fills = [
+      {
+        type: 'IMAGE',
+        imageHash: image.hash,
+        scaleMode: 'FILL'
+      }
+    ];
+
+    // Add the node to the current page
+    figma.currentPage.appendChild(node);
+    figma.viewport.scrollAndZoomIntoView([node]);
+  })
+  .catch(error => {
+    figma.notify("Failed to load image: " + error);
+  })
+  .finally(() => {
+    // figma.closePlugin();
+    console.log('the end')
+  });}
+
+
+  
+
+// /**
+//  * Recursively searches for a frame with the specified name within a node.
+//  * @param node - The node to search within.
+//  * @param frameName - The name of the frame to find.
+//  * @returns The found frame, or null if not found.
+//  */
+// function findFrameByName(node: SceneNode, frameName: string): FrameNode | null {
+//   // If the node is a frame and matches the name, return it
+//   if (node.type === 'FRAME' && node.name === frameName) {
+//     return node as FrameNode;
+//   }
+
+//   // Handle nodes that might contain children
+//   if ((node as any).children && Array.isArray((node as any).children)) {
+//     for (const child of (node as any).children) {
+//       const result = findFrameByName(child, frameName);
+//       if (result) {
+//         return result;
+//       }
+//     }
+//   }
+
+//   // Return null if not found
+//   return null;
+// }
+
+// /**
+//  * Fills the `BOOKCOVER` frame inside a given node with a solid color.
+//  * @param parentNode - The parent node containing the `BOOKCOVER` frame.
+//  */
+// function fillBookCoverWithColor(parentNode: SceneNode) {
+//   // Find the `BOOKCOVER` frame
+//   const bookCoverFrame = findFrameByName(parentNode, 'BOOKCOVER');
+
+//   if (!bookCoverFrame) {
+//     console.error('BOOKCOVER frame not found inside the parent node.');
+//     return;
+//   }
+
+//   // Apply the solid color fill to the frame
+//   // bookCoverFrame.fills = [{
+//   //   type: 'SOLID',
+//   //   color: {
+//   //     r: 1,
+//   //     g: 1,
+//   //     b: 1
+//   //   }
+//   // }];
+
+// }

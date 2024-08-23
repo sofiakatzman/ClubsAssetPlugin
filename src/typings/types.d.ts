@@ -46,4 +46,5 @@ interface PluginMessage {
   curatedMobileVariant?: string;
   squareSelected?: boolean;
   squareVariant?: string;
+  bookCover: string;
 }
