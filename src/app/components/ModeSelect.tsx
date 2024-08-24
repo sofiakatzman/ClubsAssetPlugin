@@ -1,20 +1,30 @@
 import React from 'react';
+import '../styles/modeselectstyles.css';
 
 interface ModeSelectProps {
-  toggleMode: () => void;
+  toggleMode: (mode: string) => void;
+  selectedMode: string;
 }
 
-const ModeSelect: React.FC<ModeSelectProps> = ({ toggleMode }) => {
+const ModeSelect: React.FC<ModeSelectProps> = ({ toggleMode, selectedMode }) => {
   return (
-    <div>
-      <div onClick={toggleMode} style={{ cursor: 'pointer', padding: '8px', border: '1px solid #ddd', marginBottom: '4px' }}>
-        Series
-      </div>
-      <div onClick={toggleMode} style={{ cursor: 'pointer', padding: '8px', border: '1px solid #ddd' }}>
-        Bulk
+    <div className="mode-select-bg-container">
+      <div className="mode-select-container">
+        <div
+          className={`mode-button ${selectedMode === 'Series' ? 'selected' : ''} ${selectedMode === 'Series' ? 'left-active' : ''}`}
+          onClick={() => toggleMode('Series')}
+        >
+          Series
+        </div>
+        <div
+          className={`mode-button ${selectedMode === 'Bulk' ? 'selected' : ''} ${selectedMode === 'Bulk' ? 'right-active' : ''}`}
+          onClick={() => toggleMode('Bulk')}
+        >
+          Bulk
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default ModeSelect;

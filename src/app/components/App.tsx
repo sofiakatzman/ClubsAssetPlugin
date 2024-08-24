@@ -32,7 +32,7 @@ function App() {
 
   return (
     <div>
-      <ModeSelect toggleMode={toggleMode} />
+      <ModeSelect toggleMode={toggleMode} selectedMode={selectedMode}/>
       {selectedMode === "Bulk" && (
         <div>
         <BulkPage textbox={textbox} onSyncClick={onSyncClick} />
