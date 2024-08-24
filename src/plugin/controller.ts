@@ -1,5 +1,5 @@
 import {fetchAirTable } from './utils'
-figma.showUI(__html__);
+figma.showUI(__html__, { width: 600, height: 1000 });
 
 figma.ui.onmessage =  (msg: {type: string, airtableURL: string}) => {
 

@@ -1,0 +1,19 @@
+.mode-select-container {
+    display: flex;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+  }
+  
+  .mode-button {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s ease;
+  }
+  
+  .mode-button.selected {
+    background-color: white;
+  }

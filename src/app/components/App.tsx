@@ -1,16 +1,26 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../styles/ui.css';
+import ModeSelect from './ModeSelect';
+import BulkPage from './BulkPage';
 
 function App() {
-  const textbox = React.useRef<HTMLInputElement>(null);
+  const [selectedMode, setSelectedMode] = useState('Bulk');
 
-  const onSync = () => {
-    const airtableURL: string = textbox.current?.value || 'https://api.airtable.com/v0/appO7sUJLojVQUUqo/Assets';
-    parent.postMessage({ pluginMessage: { type: 'bulk-processing', airtableURL } }, '*');
-    
+  // Function to toggle the selected mode
+  const toggleMode = () => {
+    setSelectedMode((prevMode) => (prevMode === "Bulk" ? "Series" : "Bulk"));
   };
 
-  React.useEffect(() => {
+  // Airtable URL input box
+  const textbox = useRef<HTMLInputElement>(null);
+
+  // Sends Airtable link so script runs -> no link = default AT link being used
+  const onSyncClick = () => {
+    const airtableURL: string = textbox.current?.value || 'https://api.airtable.com/v0/appO7sUJLojVQUUqo/Assets';
+    parent.postMessage({ pluginMessage: { type: 'bulk-processing', airtableURL } }, '*');
+  };
+
+  useEffect(() => {
     // This is how we read messages sent from the plugin controller
     window.onmessage = (event) => {
       const { type } = event.data.pluginMessage;
@@ -22,13 +32,23 @@ function App() {
 
   return (
     <div>
-      <h2>Bulk Asset Creations</h2>
-      <p>
-        Airtable URL: <input ref={textbox} />
-      </p>
-      <button id="create" onClick={onSync}>
-        Sync
-      </button>
+      <ModeSelect toggleMode={toggleMode} />
+      {selectedMode === "Bulk" && (
+        <div>
+        <BulkPage textbox={textbox} onSyncClick={onSyncClick} />
+        </div>
+      )}
+      {selectedMode === "Series" && (
+        <div>
+          <h2>Series Asset Creation</h2>
+          <p>
+            Airtable URL: <input ref={textbox} />
+          </p>
+          <button id="create" onClick={onSyncClick}>
+            Sync
+          </button>
+        </div>
+      )}
     </div>
   );
 }

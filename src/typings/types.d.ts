@@ -47,3 +47,7 @@ interface PluginMessage {
   squareVariant?: string;
   bookCover: string;
 }
+
+interface ModeSelectProps {
+  toggleMode: () => void;
+}
