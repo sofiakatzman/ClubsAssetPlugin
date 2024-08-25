@@ -427,8 +427,24 @@ export async function makeSeries(msg: any) {
 
             if (selectedVariant) {
               const newPromo = selectedVariant.createInstance();
-              nodes.push(newPromo);
+              const nodes: SceneNode[] = [newPromo];
+              //stack all assets under eachother without overlap
+              nodes.forEach(node => {
+                node.y = currentY;
+                
+                // Append node to the current page
+                figma.currentPage.appendChild(node);
+            
+                // Increment currentY for the next node
+                currentY += node.height + 50; 
 
+              });
+            
+              // Center the viewport on the new nodes
+              figma.viewport.scrollAndZoomIntoView(nodes);
+              figma.currentPage.selection = nodes;
+
+          
               if (asset.copy && typeof asset.copy === 'object') {
                 applyTextContent(newPromo, asset.copy);
               } else {
