@@ -49,7 +49,7 @@ function App() {
           pluginMessage: {
             type: 'resize-ui',
             mode: newMode,
-            dimensions: newMode === "Bulk" ? { width: 600, height: 280 } : { width: 600, height: 1000 },
+            dimensions: newMode === "Bulk" ? { width: 600, height: 240 } : { width: 600, height: 900 },
           },
         },
         '*'

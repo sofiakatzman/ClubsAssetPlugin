@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import '../styles/modestyles.css';
+import '../styles/seriesstyles.css';
+import '../styles/ui.css'
 
 // Define necessary types and interfaces
 export type BannerType = 
@@ -33,6 +36,7 @@ interface Asset {
   type: BannerType;
   variation: BannerVariation | null;
   copy: CopyProperties;
+  backgroundColor: string;
 }
 
 const BannerForm: React.FC<BannerFormProps> = () => {
@@ -46,6 +50,7 @@ const BannerForm: React.FC<BannerFormProps> = () => {
   });
 
   const [formData, setFormData] = useState<CopyProperties>({ header: '' });
+  const [backgroundColor, setBackgroundColor] = useState<string>('');
 
   const assetTypes: Record<BannerType, BannerVariation[]> = {
     'Full Size Banner - Short': [
@@ -95,6 +100,15 @@ const BannerForm: React.FC<BannerFormProps> = () => {
     ]
   };
 
+  const backgroundColors = [
+    'Pink',
+    'Yellow',
+    'Green',
+    'Blue',
+    'Orange',
+  ];
+
+  
   const determineRequiredProperties = (): Partial<CopyProperties> => {
     const variations = Object.values(selectedTypes).filter(v => v !== null) as BannerVariation[];
     const requiredProps: Partial<CopyProperties> = {};
@@ -167,6 +181,10 @@ const BannerForm: React.FC<BannerFormProps> = () => {
     }));
   };
 
+  const handleBackgroundColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setBackgroundColor(e.target.value);
+  };
+
   const handleCreateClick = () => {
     const assets: Asset[] = Object.keys(selectedTypes)
       .filter(type => selectedTypes[type as BannerType] !== null)
@@ -179,10 +197,11 @@ const BannerForm: React.FC<BannerFormProps> = () => {
           cta1: formData.cta1 || '',
           cta2: formData.cta2 || '',
           pretext: formData.pretext || '',
-        }
+        },
+        backgroundColor: backgroundColor, 
       }));
 
-      console.log(assets)
+    console.log(assets)
 
     window.parent.postMessage({
       pluginMessage: {
@@ -193,98 +212,137 @@ const BannerForm: React.FC<BannerFormProps> = () => {
   };
 
   const requiredProperties = determineRequiredProperties();
+  const hasSelectedAssets = Object.values(selectedTypes).some(v => v !== null);
 
   return (
-    <div className="banner-form">
-      <h1>Banner Form</h1>
-      {Object.keys(assetTypes).map((type) => (
-        <div key={type}>
-          <label>
-            <input
-              type="checkbox"
-              checked={!!selectedTypes[type as BannerType]}
-              onChange={() => handleToggle(type as BannerType)}
-            />
-            {type}
-          </label>
-          {selectedTypes[type as BannerType] && (
-            <div>
-              <label>
-                Select Variation:
+    <div className="offset-small">
+      {/* REQUESTED ASSETS SECTION */}
+      <h2 className="container-title">Requested Assets</h2>
+      <div className="container reduced">
+        {Object.keys(assetTypes).map((type) => (
+          <div key={type} className="input-container">
+            <div className="asset-row">
+              <label className="input-label">
+                <input
+                  type="checkbox"
+                  checked={!!selectedTypes[type as BannerType]}
+                  onChange={() => handleToggle(type as BannerType)}
+                />
+                {type}
+              </label>
+            </div>
+            {selectedTypes[type as BannerType] !== null && (
+              <div className="dropdown-container">
                 <select
                   value={selectedTypes[type as BannerType] || ''}
                   onChange={(e) => handleVariationChange(type as BannerType, e.target.value as BannerVariation)}
+                  className="select"
                 >
+                  <option value="" disabled>Select an option</option>
                   {assetTypes[type as BannerType].map(variation => (
                     <option key={variation} value={variation}>
                       {variation}
                     </option>
                   ))}
                 </select>
-              </label>
-            </div>
-          )}
-        </div>
-      ))}
-      <div>
-        <h2>Form Details</h2>
-        {requiredProperties.header !== undefined && (
-          <label>
-            Header:
-            <input
-              type="text"
-              name="header"
-              value={formData.header}
-              onChange={handleInputChange}
-            />
-          </label>
-        )}
-        {requiredProperties.subtext !== undefined && (
-          <label>
-            Subtext:
-            <input
-              type="text"
-              name="subtext"
-              value={formData.subtext || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-        )}
-        {requiredProperties.cta1 !== undefined && (
-          <label>
-            CTA 1:
-            <input
-              type="text"
-              name="cta1"
-              value={formData.cta1 || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-        )}
-        {requiredProperties.cta2 !== undefined && (
-          <label>
-            CTA 2:
-            <input
-              type="text"
-              name="cta2"
-              value={formData.cta2 || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-        )}
-        {requiredProperties.pretext !== undefined && (
-          <label>
-            Pretext:
-            <input
-              type="text"
-              name="pretext"
-              value={formData.pretext || ''}
-              onChange={handleInputChange}
-            />
-          </label>
-        )}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-      <button onClick={handleCreateClick}>Create</button>
+
+{/* REQUIRED DETAILS SECTION */}
+{hasSelectedAssets && (
+  <div className='divider'>
+    <h2 className="container-title">Required Details</h2>
+    <div className="container">
+      <div className="mb">
+      {requiredProperties.header !== undefined && (
+        <label className="input-label">
+          Header:
+          <input
+            type="text"
+            name="header"
+            value={formData.header}
+            onChange={handleInputChange}
+            className="input"
+          />
+        </label>
+      )}
+      {requiredProperties.subtext !== undefined && (
+        <label className="input-label">
+          Subtext:
+          <input
+            type="text"
+            name="subtext"
+            value={formData.subtext || ''}
+            onChange={handleInputChange}
+            className="input"
+          />
+        </label>
+      )}
+      {requiredProperties.cta1 !== undefined && (
+        <label className="input-label">
+          CTA 1:
+          <input
+            type="text"
+            name="cta1"
+            value={formData.cta1 || ''}
+            onChange={handleInputChange}
+            className="input"
+          />
+        </label>
+      )}
+      {requiredProperties.cta2 !== undefined && (
+        <label className="input-label">
+          CTA 2:
+          <input
+            type="text"
+            name="cta2"
+            value={formData.cta2 || ''}
+            onChange={handleInputChange}
+            className="input"
+          />
+        </label>
+      )}
+      {requiredProperties.pretext !== undefined && (
+        <label className="input-label">
+          Pretext:
+          <input
+            type="text"
+            name="pretext"
+            value={formData.pretext || ''}
+            onChange={handleInputChange}
+            className="input"
+          />
+        </label>
+      )}
+      
+      {/* BACKGROUND COLOR SECTION */}
+        <label className="input-label">
+          Background Color:
+          <select
+            value={backgroundColor}
+            onChange={handleBackgroundColorChange}
+            className="select bg" 
+          >
+            <option value="" disabled>Select a color</option>
+            {backgroundColors.map(color => (
+              <option key={color} value={color}>
+                {color}
+              </option>
+            ))}
+          </select>
+        </label>    </div>
+      {/* CREATE BUTTON */}
+          <button id="create" className=""onClick={handleCreateClick}>
+            <b>Create</b>
+          </button>
+        </div>
+      </div>
+
+  
+)}
     </div>
   );
 };
