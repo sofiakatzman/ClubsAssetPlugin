@@ -51,3 +51,9 @@ interface PluginMessage {
 interface ModeSelectProps {
   toggleMode: () => void;
 }
+
+interface SeriesPageProps {
+  //   textbox: React.RefObject<HTMLInputElement>;  
+  onCreateClick: () => void;
+  }
+  
