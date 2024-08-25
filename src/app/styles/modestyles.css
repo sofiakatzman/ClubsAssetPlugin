@@ -45,3 +45,9 @@
     box-sizing: border-box; 
     margin-bottom: 4px;
 }
+
+.divider {
+    margin-top: 52px;
+}
+
+/* styles specific to series page */

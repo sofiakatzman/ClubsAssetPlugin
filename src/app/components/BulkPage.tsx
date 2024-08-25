@@ -9,7 +9,7 @@ interface BulkPageProps {
 const BulkPage: React.FC<BulkPageProps> = ({ textbox, onSyncClick }) => {
   return (
     <div className="offset">
-      <h2 className="container-title"> Airtable Bulk Import </h2>
+      <h2 className="container-title">Airtable Assets</h2>
     <div className="container">     
       <div className="input-container">
         <label htmlFor="url-input" className="input-label">URL</label>
