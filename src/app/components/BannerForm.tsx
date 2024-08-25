@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-// Define the necessary types and interfaces locally
+// Define necessary types and interfaces
 export type BannerType = 
   | 'Full Size Banner'
   | 'Half Size Banner'
@@ -27,57 +27,15 @@ export type CopyProperties = {
   pretext?: string;
 };
 
-export interface Asset {
-  id: string;
+interface BannerFormProps {}
+
+interface Asset {
   type: BannerType;
-  variations: BannerVariation[];
-  createdTime: string;
-  fields: {
-    [key: string]: string;
-    campaign: string;
-    Title: string;
-    CTA1: string;
-    CTA2: string;
-    PreText: string;
-    SubText: string;
-    DiscountCode: string;
-    Copyright: string;
-    backgroundColor: string;
-  };
+  variation: BannerVariation | null;
+  copy: CopyProperties;
 }
 
-export interface PluginMessage {
-  header: string;
-  cta1: string;
-  cta2: string;
-  subtext: string;
-  pretext: string;
-  copyright: string;
-  backgroundColor: string;
-  fullSelected?: boolean;
-  fullVariant?: string;
-  halfSelected?: boolean;
-  halfVariant?: string;
-  searchSelected?: boolean;
-  searchVariant?: string;
-  curatedSelected?: boolean;
-  curatedVariant?: string;
-  curatedMobileSelected?: boolean;
-  curatedMobileVariant?: string;
-  squareSelected?: boolean;
-  squareVariant?: string;
-  bookCover: string;
-}
-
-export interface ModeSelectProps {
-  toggleMode: () => void;
-}
-
-export interface SeriesPageProps {
-  onCreateClick: () => void;
-}
-
-const BannerForm: React.FC = () => {
+const BannerForm: React.FC<BannerFormProps> = () => {
   const [selectedTypes, setSelectedTypes] = useState<Record<BannerType, BannerVariation | null>>({
     'Full Size Banner': null,
     'Half Size Banner': null,
@@ -89,7 +47,6 @@ const BannerForm: React.FC = () => {
 
   const [formData, setFormData] = useState<CopyProperties>({ header: '' });
 
-  // Asset types and their variations
   const assetTypes: Record<BannerType, BannerVariation[]> = {
     'Full Size Banner': [
       'Header Only',
@@ -139,57 +96,54 @@ const BannerForm: React.FC = () => {
     ]
   };
 
-  // Determine required copy properties based on selected variations
-  const determineRequiredProperties = () => {
-    const requiredProperties: Partial<CopyProperties> = {};
-
-    Object.keys(selectedTypes).forEach((type) => {
-      const variation = selectedTypes[type as BannerType];
-      if (variation) {
-        switch (variation) {
-          case 'Header Only':
-            requiredProperties.header = '';
-            break;
-          case 'Header and Subtext':
-            requiredProperties.header = '';
-            requiredProperties.subtext = '';
-            break;
-          case 'Header and Single CTA':
-            requiredProperties.header = '';
-            requiredProperties.cta1 = '';
-            break;
-          case 'Header and Double CTA':
-            requiredProperties.header = '';
-            requiredProperties.cta1 = '';
-            requiredProperties.cta2 = '';
-            break;
-          case 'Header, Pretext and Single CTA':
-            requiredProperties.header = '';
-            requiredProperties.pretext = '';
-            requiredProperties.cta1 = '';
-            break;
-          case 'Header, Pretext and Double CTA':
-            requiredProperties.header = '';
-            requiredProperties.pretext = '';
-            requiredProperties.cta1 = '';
-            requiredProperties.cta2 = '';
-            break;
-          case 'Header, Subtext and Single CTA':
-            requiredProperties.header = '';
-            requiredProperties.subtext = '';
-            requiredProperties.cta1 = '';
-            break;
-          case 'Header, Subtext and Double CTA':
-            requiredProperties.header = '';
-            requiredProperties.subtext = '';
-            requiredProperties.cta1 = '';
-            requiredProperties.cta2 = '';
-            break;
-        }
+  const determineRequiredProperties = (): Partial<CopyProperties> => {
+    const variations = Object.values(selectedTypes).filter(v => v !== null) as BannerVariation[];
+    const requiredProps: Partial<CopyProperties> = {};
+  
+    variations.forEach(variation => {
+      switch (variation) {
+        case 'Header Only':
+          requiredProps.header = '';
+          break;
+        case 'Header and Subtext':
+          requiredProps.header = '';
+          requiredProps.subtext = '';
+          break;
+        case 'Header and Single CTA':
+          requiredProps.header = '';
+          requiredProps.cta1 = '';
+          break;
+        case 'Header and Double CTA':
+          requiredProps.header = '';
+          requiredProps.cta1 = '';
+          requiredProps.cta2 = '';
+          break;
+        case 'Header, Pretext and Single CTA':
+          requiredProps.header = '';
+          requiredProps.pretext = '';
+          requiredProps.cta1 = '';
+          break;
+        case 'Header, Pretext and Double CTA':
+          requiredProps.header = '';
+          requiredProps.pretext = '';
+          requiredProps.cta1 = '';
+          requiredProps.cta2 = '';
+          break;
+        case 'Header, Subtext and Single CTA':
+          requiredProps.header = '';
+          requiredProps.subtext = '';
+          requiredProps.cta1 = '';
+          break;
+        case 'Header, Subtext and Double CTA':
+          requiredProps.header = '';
+          requiredProps.subtext = '';
+          requiredProps.cta1 = '';
+          requiredProps.cta2 = '';
+          break;
       }
     });
-
-    return requiredProperties;
+  
+    return requiredProps;
   };
 
   const handleToggle = (type: BannerType) => {
@@ -214,10 +168,35 @@ const BannerForm: React.FC = () => {
     }));
   };
 
+  const handleCreateClick = () => {
+    const assets: Asset[] = Object.keys(selectedTypes)
+      .filter(type => selectedTypes[type as BannerType] !== null)
+      .map(type => ({
+        type: type as BannerType,
+        variation: selectedTypes[type as BannerType] || null,
+        copy: {
+          header: formData.header,
+          subtext: formData.subtext || '',
+          cta1: formData.cta1 || '',
+          cta2: formData.cta2 || '',
+          pretext: formData.pretext || '',
+        }
+      }));
+
+      console.log(assets)
+
+    // window.parent.postMessage({
+    //   pluginMessage: {
+    //     type: 'series-processing',
+    //     assets
+    //   }
+    // }, '*');
+  };
+
   const requiredProperties = determineRequiredProperties();
 
   return (
-    <div>
+    <div className="banner-form">
       <h1>Banner Form</h1>
       {Object.keys(assetTypes).map((type) => (
         <div key={type}>
@@ -306,6 +285,7 @@ const BannerForm: React.FC = () => {
           </label>
         )}
       </div>
+      <button onClick={handleCreateClick}>Create</button>
     </div>
   );
 };

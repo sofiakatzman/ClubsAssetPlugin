@@ -54,6 +54,6 @@ interface ModeSelectProps {
 
 interface SeriesPageProps {
   //   textbox: React.RefObject<HTMLInputElement>;  
-  onCreateClick: () => void;
+  // onCreateClick: () => void;
   }
   

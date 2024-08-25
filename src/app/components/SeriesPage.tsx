@@ -3,12 +3,9 @@ import '../styles/modestyles.css';
 import '../styles/figma.css'
 import BannerForm from './BannerForm';
 
-interface SeriesPageProps {
-  onCreateClick: () => void;
-}
 
-const SeriesPage: React.FC<SeriesPageProps> = ({ onCreateClick }) => {
-  onCreateClick()
+const SeriesPage: React.FC<SeriesPageProps> = () => {
+
   return (
     <div className="offset">
     <BannerForm />
