@@ -2,13 +2,27 @@ import React, { useState, useRef, useEffect } from 'react';
 import '../styles/ui.css';
 import ModeSelect from './ModeSelect';
 import BulkPage from './BulkPage';
+import SeriesPage from './SeriesPage';
 
 function App() {
-  const [selectedMode, setSelectedMode] = useState('Bulk');
+  const [selectedMode, setSelectedMode] = useState('Series');
 
-  // Function to toggle the selected mode
   const toggleMode = () => {
-    setSelectedMode((prevMode) => (prevMode === "Bulk" ? "Series" : "Bulk"));
+    setSelectedMode((prevMode) => {
+      const newMode = prevMode === "Bulk" ? "Series" : "Bulk";
+      // Send message to the controller to resize the UI
+      parent.postMessage(
+        {
+          pluginMessage: {
+            type: 'resize-ui',
+            mode: newMode,
+            dimensions: newMode === "Bulk" ? { width: 600, height: 280 } : { width: 600, height: 1000 },
+          },
+        },
+        '*'
+      );
+      return newMode;
+    });
   };
 
   // Airtable URL input box
@@ -19,6 +33,13 @@ function App() {
     const airtableURL: string = textbox.current?.value || 'https://api.airtable.com/v0/appO7sUJLojVQUUqo/Assets';
     parent.postMessage({ pluginMessage: { type: 'bulk-processing', airtableURL } }, '*');
   };
+
+  const onCreateClick = () => {
+    // const airtableURL: string = textbox.current?.value || 'https://api.airtable.com/v0/appO7sUJLojVQUUqo/Assets';
+    // parent.postMessage({ pluginMessage: { type: 'series-processing' } }, '*');
+    console.log("You've clicked generate assets!")
+  };
+
 
   useEffect(() => {
     // This is how we read messages sent from the plugin controller
@@ -33,20 +54,19 @@ function App() {
   return (
     <div>
       <ModeSelect toggleMode={toggleMode} selectedMode={selectedMode}/>
+
+      {/* DISPLAY BULK MODE */}
       {selectedMode === "Bulk" && (
         <div>
         <BulkPage textbox={textbox} onSyncClick={onSyncClick} />
         </div>
       )}
+
+      {/* DISPLAY SERIES MODE */}
       {selectedMode === "Series" && (
+
         <div>
-          <h2>Series Asset Creation</h2>
-          <p>
-            Airtable URL: <input ref={textbox} />
-          </p>
-          <button id="create" onClick={onSyncClick}>
-            Sync
-          </button>
+          <SeriesPage onCreateClick={onCreateClick}/>
         </div>
       )}
     </div>
