@@ -1,4 +1,4 @@
-import {fetchAirTable } from './utils'
+import {fetchAirTable, makeSeries} from './utils'
 figma.showUI(__html__, { width: 600, height: 1000 });
 
 figma.ui.onmessage = (msg) => {
@@ -10,8 +10,13 @@ figma.ui.onmessage = (msg) => {
     }
   }
 
+  if(msg.type === 'make-series'){
+    makeSeries(msg)
+  }
+
   if (msg.type === 'resize-ui') {
     const { width, height } = msg.dimensions;
     figma.ui.resize(width, height);
   }
 };
+

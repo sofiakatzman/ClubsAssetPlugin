@@ -1,7 +1,7 @@
 const AIRTABLEAPIKEY = process.env.AIRTABLE_API_KEY;
 // let generatedAssets: SceneNode[] = [];
 let currentY = 0;
-
+loadFonts() 
 // Function to clear the existing assets and create a new auto layout container
 // export function createAutoLayoutContainer() {
 //   // Remove previous container if it exists
@@ -233,7 +233,7 @@ function changeAssetFillColor(assetNode: GeometryMixin, colorName: string) {
 //   }
 // }
 
-// Define a helper function to handle asset generation for each component set
+// Define a helper function to handle asset generation for each component set -> PREV WORKING FOR AIRTABLE!!!! <-----------------~~~~~~
 async function generateAsset(componentSet: ComponentSetNode | undefined, selectedVariant: string | undefined, variantMapping: string, pluginMessage: PluginMessage) {
   // Error if no components found
 
@@ -320,10 +320,6 @@ async function generateAsset(componentSet: ComponentSetNode | undefined, selecte
   // Scroll and zoom into view
 }
 
-
-
-  
-
 /**
  * Recursively searches for a frame with the specified name within a node.
  * @param node - The node to search within.
@@ -408,4 +404,205 @@ function getBookCover(parentNode: SceneNode, bookCover:string) {
       // figma.closePlugin();
       console.log('the end');
     });
+}
+export async function makeSeries(msg: any) {
+  await loadFonts();
+  console.log("Received message:", msg);
+
+  const nodes: SceneNode[] = [];
+  const componentSets = loadComponentSets();
+
+  for (const key in msg) {
+    if (msg.hasOwnProperty(key)) {
+      const assetArray = msg[key];
+      console.log(`Processing key: ${key}, assetArray:`, assetArray); // Debugging line
+
+      if (Array.isArray(assetArray)) {
+        for (const asset of assetArray) {
+          console.log(`Processing asset:`, asset); // Debugging line
+          const variationCode = getVariationCode(asset);
+          if (variationCode) {
+            asset.variation = variationCode;
+            const selectedVariant = getVariant(componentSets, asset);
+
+            if (selectedVariant) {
+              const newPromo = selectedVariant.createInstance();
+              nodes.push(newPromo);
+
+              if (asset.copy && typeof asset.copy === 'object') {
+                applyTextContent(newPromo, asset.copy);
+              } else {
+                console.error("Error: The copy field is not an object or is missing.");
+              }
+
+              if (asset.backgroundColor) {
+                changeAssetFillColor(newPromo, asset.backgroundColor);
+              }
+            } else {
+              console.error(`No matching component found for ${asset.type} - ${asset.variation}`);
+            }
+          } else {
+            console.error(`No matching variation code found for ${asset.type} - ${asset.variation}`);
+          }
+        }
+      } else {
+        console.error(`Error: Expected an array for ${key}, but got ${typeof assetArray}.`);
+      }
+    }
+  }
+
+  figma.viewport.scrollAndZoomIntoView(nodes);
+}
+
+function loadComponentSets() {
+  return {
+    "Full Size Banner - Short": figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Full Size Banner - Short") as ComponentSetNode,
+    "Half Size Banner": figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Half Size Banner") as ComponentSetNode,
+    "Search Results Banner - Desktop": figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Search Results Banner - Desktop") as ComponentSetNode,
+    "Collection Page Hero - Desktop": figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Desktop") as ComponentSetNode,
+    "Collection Page Hero - Mobile": figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Collection Page Hero - Mobile") as ComponentSetNode,
+    "Square": figma.root.findOne(node => node.type === "COMPONENT_SET" && node.name === "Square") as ComponentSetNode
+  };
+}
+
+function getVariant(componentSets: any, asset: any) {
+  const { type, variation } = asset;
+  const componentSet = componentSets[type];
+  if (!componentSet) {
+    console.error(`Component set for ${type} not found`);
+    return null;
+  }
+
+  // Get the component variant based on the variation code
+  return componentSet.findOne(node => node.type === "COMPONENT" && node.name.includes(variation));
+}
+
+function applyTextContent(promo: InstanceNode, copy: any) {
+  if (typeof copy !== 'object') {
+    console.error("Error: The copy provided is not an object.");
+    return;
+  }
+
+  const { header, subtext, cta1, cta2, pretext } = copy;
+  const textFields = {
+    "Header": header,
+    "Subtext": subtext,
+    "CTA1": cta1,
+    "CTA2": cta2,
+    "PreText": pretext
+  };
+
+  for (const [fieldName, content] of Object.entries(textFields)) {
+    const textNode = promo.findOne(node => node.name === fieldName && node.type === "TEXT") as TextNode;
+    if (textNode && content !== undefined) {
+      textNode.characters = content || "";
+    }
+  }
+}
+
+function getVariationCode(asset: any): string | null {
+  const { variation, type } = asset;
+
+  switch (type) {
+    case "Full Size Banner - Short":
+      switch (variation) {
+        case "Header Only":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+        case "Header and Subtext":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+        case "Header and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+        case "Header and Double CTA":
+          return "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
+        default:
+          return null;
+      }
+    case "Half Size Banner":
+      switch (variation) {
+        case "Header Only":
+          return "CTA=No, PreText=No, SubText=No";
+        case "Header and Subtext":
+          return "CTA=No, PreText=No, SubText=Yes";
+        case "Header and Single CTA":
+          return "CTA=Yes, PreText=No, SubText=No";
+        case "Header, Subtext and Single CTA":
+          return "CTA=Yes, PreText=No, SubText=Yes";
+        case "Header, Pretext and Single CTA":
+          return "CTA=Yes, PreText=Yes, SubText=No";
+        default:
+          return null;
+      }
+      case "Search Results Banner - Desktop":
+      switch (variation) {
+        case "Header Only":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+        case "Header and Subtext":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+        case "Header and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+        case "Header and Double CTA":
+          return "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
+        case "Header, Pretext and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No";
+        case "Header, Pretext and Double CTA":
+          return "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No";
+        default:
+          return null;
+      }
+    case "Collection Page Hero - Desktop":
+      switch (variation) {
+        case "Header Only":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+        case "Header and Subtext":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+        case "Header and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+        case "Header and Double CTA":
+          return "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
+        case "Header, Pretext and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No";
+        case "Header, Pretext and Double CTA":
+          return "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No";
+        default:
+          return null;
+      }
+    case "Collection Page Hero - Mobile":
+      switch (variation) {
+        case "Header Only":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+        case "Header and Subtext":
+          return "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+        case "Header and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+        case "Header and Double CTA":
+          return "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
+        case "Header, Pretext and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No";
+        case "Header, Subtext and Single CTA":
+          return "CTA=Yes, CTA QTY=1, PreText=No, SubText=Yes";
+        case "Header, Subtext and Double CTA":
+          return "CTA=Yes, CTA QTY=2, PreText=No, SubText=Yes";
+        default:
+          return null;
+      }
+
+
+    case "Square":
+      switch (variation) {
+        case "Header Only":
+          return "CTA=No, PreText=No, SubText=No";
+        case "Header and Subtext":
+          return "CTA=No, PreText=No, SubText=Yes";
+        case "Header and Single CTA":
+          return "CTA=Yes, PreText=No, SubText=No";
+        case "Header, Subtext and Single CTA":
+          return "CTA=Yes, PreText=No, SubText=Yes";
+        case "Header, Pretext and Single CTA":
+          return "CTA=Yes, PreText=Yes, SubText=No";
+        default:
+          return null;
+      }
+    default:
+      return null;
+  }
 }

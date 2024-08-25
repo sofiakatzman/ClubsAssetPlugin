@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 // Define necessary types and interfaces
 export type BannerType = 
-  | 'Full Size Banner'
+  | 'Full Size Banner - Short'
   | 'Half Size Banner'
   | 'Search Results Banner - Desktop'
   | 'Collection Page Hero - Desktop'
   | 'Collection Page Hero - Mobile'
-  | 'Square Banner';
+  | 'Square';
 
 export type BannerVariation = 
   | 'Header Only'
@@ -37,18 +37,18 @@ interface Asset {
 
 const BannerForm: React.FC<BannerFormProps> = () => {
   const [selectedTypes, setSelectedTypes] = useState<Record<BannerType, BannerVariation | null>>({
-    'Full Size Banner': null,
+    'Full Size Banner - Short': null,
     'Half Size Banner': null,
     'Search Results Banner - Desktop': null,
     'Collection Page Hero - Desktop': null,
     'Collection Page Hero - Mobile': null,
-    'Square Banner': null,
+    'Square': null,
   });
 
   const [formData, setFormData] = useState<CopyProperties>({ header: '' });
 
   const assetTypes: Record<BannerType, BannerVariation[]> = {
-    'Full Size Banner': [
+    'Full Size Banner - Short': [
       'Header Only',
       'Header and Subtext',
       'Header and Single CTA',
@@ -67,7 +67,7 @@ const BannerForm: React.FC<BannerFormProps> = () => {
       'Header and Single CTA',
       'Header and Double CTA',
       'Header, Pretext and Single CTA',
-      'Header, Subtext and Single CTA'
+      'Header, Pretext and Double CTA'
     ],
     'Collection Page Hero - Desktop': [
       'Header Only',
@@ -83,11 +83,10 @@ const BannerForm: React.FC<BannerFormProps> = () => {
       'Header and Single CTA',
       'Header and Double CTA',
       'Header, Pretext and Single CTA',
-      'Header, Pretext and Double CTA',
       'Header, Subtext and Single CTA',
       'Header, Subtext and Double CTA'
     ],
-    'Square Banner': [
+    'Square': [
       'Header Only',
       'Header and Subtext',
       'Header and Single CTA',
@@ -185,12 +184,12 @@ const BannerForm: React.FC<BannerFormProps> = () => {
 
       console.log(assets)
 
-    // window.parent.postMessage({
-    //   pluginMessage: {
-    //     type: 'series-processing',
-    //     assets
-    //   }
-    // }, '*');
+    window.parent.postMessage({
+      pluginMessage: {
+        type: 'make-series',
+        assets
+      }
+    }, '*');
   };
 
   const requiredProperties = determineRequiredProperties();

@@ -6,12 +6,12 @@ import SeriesPage from './SeriesPage';
 
 // Define Asset and related types if not imported
 export type BannerType = 
-  | 'Full Size Banner'
+  | 'Full Size Banner - Short'
   | 'Half Size Banner'
   | 'Search Results Banner - Desktop'
   | 'Collection Page Hero - Desktop'
   | 'Collection Page Hero - Mobile'
-  | 'Square Banner';
+  | 'Square';
 
 export type BannerVariation = 
   | 'Header Only'
