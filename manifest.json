@@ -1,6 +1,6 @@
 {
   "name": "Figma Plugin Template",
-  "id": "1392168037057810985",
+  "id": "000000",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html",
@@ -10,7 +10,8 @@
       "https://cdn.jsdelivr.net",
       "https://rsms.me",
       "https://www.figma.com",
-      "https://www.airtable.com"
+      "https://api.airtable.com/v0/appO7sUJLojVQUUqo/Assets",
+      "https://embed.cdn.pais.scholastic.com"
     ]
   }
 }
