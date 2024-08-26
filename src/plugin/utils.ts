@@ -123,7 +123,7 @@ export function fetchAirTable(airtableURL: string) {
             variantMapping = "CTA=No, PreText=No, SubText=No"
           } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header and Subtext"){
             variantMapping = "CTA=No, PreText=No, SubText=Yes"
-          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header with CTA"){
+          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header and Single CTA"){
             variantMapping = "CTA=Yes, PreText=No, SubText=No"
           } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header, CTA and Subtext"){
            variantMapping = "CTA=Yes, PreText=No, SubText=Yes"
@@ -132,20 +132,73 @@ export function fetchAirTable(airtableURL: string) {
           }
 
           //process full size banner - short
-          if(asset.fields.Type === "Full Banner - Short" && asset.fields.Layout==="Header Only"){
-            variantMapping = "CTA=No, PreText=No, SubText=No"
+          if (asset.fields.Type === "Full Size Banner - Short" && asset.fields.Layout === "Header Only") {
+            variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Full Size Banner - Short" && asset.fields.Layout === "Header and Subtext") {
+              variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+          } else if (asset.fields.Type === "Full Size Banner - Short" && asset.fields.Layout === "Header and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Full Size Banner - Short" && asset.fields.Layout === "Header and Double CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
           }
-          if(asset.fields.Type === "Full Banner - Short" && asset.fields.Layout==="Header Only"){
-            variantMapping = "CTA=No, PreText=No, SubText=No"
+
+          //process search results desktop
+          if (asset.fields.Type === "Search Results Banner - Desktop" && asset.fields.Layout === "Header Only") {
+            variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Search Results Banner - Desktop" && asset.fields.Layout === "Header and Subtext") {
+              variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+          } else if (asset.fields.Type === "Search Results Banner - Desktop" && asset.fields.Layout === "Header and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Search Results Banner - Desktop" && asset.fields.Layout === "Header and Double CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Search Results Banner - Desktop" && asset.fields.Layout === "Header, Pretext and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No";
+          } else if (asset.fields.Type === "Search Results Banner - Desktop" && asset.fields.Layout === "Header, Pretext and Double CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=2, PreText=Yes, SubText=No";
           }
-          
-          //process full size
 
-          //process full size
+          //process collection page hero - desktop
+          if (asset.fields.Type === "Collection Page Hero - Desktop" && asset.fields.Layout === "Header Only") {
+              variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Collection Page Hero - Desktop" && asset.fields.Layout === "Header and Subtext") {
+              variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+          } else if (asset.fields.Type === "Collection Page Hero - Desktop" && asset.fields.Layout === "Header and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Collection Page Hero - Desktop" && asset.fields.Layout === "Header and Double CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Collection Page Hero - Desktop" && asset.fields.Layout === "Header, Pretext and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No";
+          }
 
-          //process full size
+          //process collection page hero - mobile
+          if (asset.fields.Type === "Collection Page Hero - Mobile" && asset.fields.Layout === "Header Only") {
+            variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Collection Page Hero - Mobile" && asset.fields.Layout === "Header and Subtext") {
+              variantMapping = "CTA=No, CTA QTY=0, PreText=No, SubText=Yes";
+          } else if (asset.fields.Type === "Collection Page Hero - Mobile" && asset.fields.Layout === "Header and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Collection Page Hero - Mobile" && asset.fields.Layout === "Header and Double CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=2, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Collection Page Hero - Mobile" && asset.fields.Layout === "Header, Pretext and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=Yes, SubText=No";
+          } else if (asset.fields.Type === "Collection Page Hero - Mobile" && asset.fields.Layout === "Header, Subtext and Single CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=1, PreText=No, SubText=Yes";
+          } else if (asset.fields.Type === "Collection Page Hero - Mobile" && asset.fields.Layout === "Header, Subtext and Double CTA") {
+              variantMapping = "CTA=Yes, CTA QTY=2, PreText=No, SubText=Yes";
+          }
 
-          //process full size
+          //process square
+          if (asset.fields.Type === "Square" && asset.fields.Layout === "Header Only") {
+            variantMapping = "CTA=No, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Square" && asset.fields.Layout === "Header and Subtext") {
+              variantMapping = "CTA=No, PreText=No, SubText=Yes";
+          } else if (asset.fields.Type === "Square" && asset.fields.Layout === "Header and Single CTA") {
+              variantMapping = "CTA=Yes, PreText=No, SubText=No";
+          } else if (asset.fields.Type === "Square" && asset.fields.Layout === "Header, Subtext and Single CTA") {
+              variantMapping = "CTA=Yes, PreText=No, SubText=Yes";
+          } else if (asset.fields.Type === "Square" && asset.fields.Layout === "Header, Pretext and Single CTA") {
+              variantMapping = "CTA=Yes, PreText=Yes, SubText=No";
+          }
 
 
 
