@@ -38,7 +38,7 @@ export type CopyProperties = {
 // }
 
 function App() {
-  const [selectedMode, setSelectedMode] = useState<'Series' | 'Bulk'>('Series'); // Updated state type
+  const [selectedMode, setSelectedMode] = useState<'Series' | 'Bulk'>('Bulk'); // Updated state type
 
   const toggleMode = () => {
     setSelectedMode((prevMode) => {

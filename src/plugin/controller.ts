@@ -1,5 +1,5 @@
 import {fetchAirTable, makeSeries} from './utils'
-figma.showUI(__html__, { width: 600, height: 1000 });
+figma.showUI(__html__, { width: 600, height: 240 });
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === 'bulk-processing') {

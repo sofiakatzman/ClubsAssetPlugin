@@ -119,15 +119,15 @@ export function fetchAirTable(airtableURL: string) {
         console.log("type: " + asset.fields.Type)
           let variantMapping = asset.fields.Layout
           // process half size
-          if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header Only"){
+          if(asset.fields.Type === "Half Size Banner" && asset.fields.Layout==="Header Only"){
             variantMapping = "CTA=No, PreText=No, SubText=No"
-          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header and Subtext"){
+          } else if(asset.fields.Type === "Half Size Banner" && asset.fields.Layout==="Header and Subtext"){
             variantMapping = "CTA=No, PreText=No, SubText=Yes"
-          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header and Single CTA"){
+          } else if(asset.fields.Type === "Half Size Banner" && asset.fields.Layout==="Header and Single CTA"){
             variantMapping = "CTA=Yes, PreText=No, SubText=No"
-          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header, CTA and Subtext"){
+          } else if(asset.fields.Type === "Half Size Banner" && asset.fields.Layout==="Header, CTA and Subtext"){
            variantMapping = "CTA=Yes, PreText=No, SubText=Yes"
-          } else if(asset.fields.Type === "Half Size" && asset.fields.Layout==="Header, CTA and Pretext"){
+          } else if(asset.fields.Type === "Half Size Banner" && asset.fields.Layout==="Header, CTA and Pretext"){
             variantMapping = "CTA=Yes, PreText=Yes, SubText=No"
           }
 
