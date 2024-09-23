@@ -38,8 +38,7 @@ export type CopyProperties = {
 // }
 
 function App() {
-  const [selectedMode, setSelectedMode] = useState<'Series' | 'Bulk'>('Bulk'); // Updated state type
-
+  const [selectedMode, setSelectedMode] = useState<'Series' | 'Bulk'>('Series'); 
   const toggleMode = () => {
     setSelectedMode((prevMode) => {
       const newMode = prevMode === "Bulk" ? "Series" : "Bulk";
@@ -63,7 +62,7 @@ function App() {
 
   // Sends Airtable link so script runs -> no link = default AT link being used
   const onSyncClick = () => {
-    const airtableURL: string = textbox.current?.value || 'https://api.airtable.com/v0/appO7sUJLojVQUUqo/Assets';
+    const airtableURL: string = textbox.current?.value || 'https://figma-airtable-server-c002f4b69d57.herokuapp.com/airtable/clubs/asset';
     parent.postMessage({ pluginMessage: { type: 'bulk-processing', airtableURL } }, '*');
   };
 

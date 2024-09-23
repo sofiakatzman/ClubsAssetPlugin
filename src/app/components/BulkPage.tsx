@@ -7,16 +7,17 @@ interface BulkPageProps {
 }
 
 const BulkPage: React.FC<BulkPageProps> = ({ textbox, onSyncClick }) => {
+  console.log(textbox)
   return (
     <div className="offset">
       <h2 className="container-title">Airtable Assets</h2>
     <div className="container">     
-      <div className="input-container">
+      {/* <div className="input-container">
         <label htmlFor="url-input" className="input-label">URL</label>
         <input id="url-input" ref={textbox} className="input" />
-      </div>
+      </div> */}
       <button id="create" onClick={onSyncClick}>
-        <b>SYNC</b>
+        <b>LOAD BANNERS</b>
       </button>
         </div>
     </div>
