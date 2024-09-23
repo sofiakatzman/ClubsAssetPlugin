@@ -1,17 +1,18 @@
 {
-  "name": "Figma Plugin Template",
-  "id": "000000",
+  "name": "Clubs Asset Generator",
+  "id": "1392168037057810985",
   "api": "1.0.0",
   "main": "dist/code.js",
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": [
-      "https://cdn.jsdelivr.net",
+    "allowedDomains": [      
       "https://rsms.me",
+      "https://cdn.jsdelivr.net",
       "https://www.figma.com",
-      "https://api.airtable.com/v0/appO7sUJLojVQUUqo/Assets",
-      "https://embed.cdn.pais.scholastic.com"
+      "https://embed.cdn.pais.scholastic.com",
+      "https://figma-airtable-server-c002f4b69d57.herokuapp.com",
+      "https://static.figma.com"
     ]
   }
 }
